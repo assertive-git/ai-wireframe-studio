@@ -3,7 +3,7 @@ generator client {
 }
 
 datasource db {
-  provider = "sqlite"
+  provider = "mysql"
   url      = env("DATABASE_URL")
 }
 
@@ -11,20 +11,21 @@ model Project {
   id               String    @id @default(cuid())
   name             String
   pageType         String
-  concept          String   
-  target           String   
-  primaryAppeal    String   
-  mustInclude      String   
+  concept          String    @db.Text
+  target           String    @db.Text
+  primaryAppeal    String    @db.Text
+  mustInclude      String    @db.Text
   designDirections Json
   referenceUrls    Json
   referenceMode    String
   hearingSummary   Json?
-  currentHtml      String?  
-  currentCss       String?  
+  currentHtml      String?   @db.LongText
+  currentCss       String?   @db.LongText
   status           String    @default("intake")
   shareToken       String?   @unique
   createdAt        DateTime  @default(now())
   updatedAt        DateTime  @updatedAt
+
   assets           Asset[]
   messages         Message[]
   versions         Version[]
@@ -36,10 +37,10 @@ model Asset {
   project       Project  @relation(fields: [projectId], references: [id], onDelete: Cascade)
   name          String
   mimeType      String
-  url           String  
+  url           String   @db.Text
   rights        String   @default("usable")
-  sourceUrl     String? 
-  extractedText String? 
+  sourceUrl     String?  @db.Text
+  extractedText String?  @db.LongText
   createdAt     DateTime @default(now())
 }
 
@@ -48,7 +49,7 @@ model Message {
   projectId String
   project   Project  @relation(fields: [projectId], references: [id], onDelete: Cascade)
   role      String
-  content   String  
+  content   String   @db.LongText
   kind      String   @default("chat")
   createdAt DateTime @default(now())
 }
@@ -58,9 +59,9 @@ model Version {
   projectId     String
   project       Project  @relation(fields: [projectId], references: [id], onDelete: Cascade)
   versionNumber Int
-  html          String  
-  css           String  
-  note          String? 
+  html          String   @db.LongText
+  css           String   @db.LongText
+  note          String?  @db.Text
   createdAt     DateTime @default(now())
 
   @@unique([projectId, versionNumber])
