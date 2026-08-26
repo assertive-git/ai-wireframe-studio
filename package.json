@@ -1,0 +1,34 @@
+{
+  "name": "lp-wireframe-studio",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev",
+    "build": "prisma generate && next build",
+    "start": "next start",
+    "lint": "tsc --noEmit",
+    "db:push": "prisma db push",
+    "db:studio": "prisma studio",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@prisma/client": "^6.2.0",
+    "@sparticuz/chromium": "^138.0.0",
+    "@vercel/blob": "^1.0.0",
+    "jszip": "^3.10.1",
+    "next": "^15.5.0",
+    "openai": "^5.0.0",
+    "puppeteer-core": "^24.0.0",
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0",
+    "xlsx": "^0.18.5",
+    "zod": "^3.25.0"
+  },
+  "devDependencies": {
+    "@types/node": "^22.0.0",
+    "@types/react": "^19.0.0",
+    "@types/react-dom": "^19.0.0",
+    "prisma": "^6.2.0",
+    "typescript": "^5.8.0"
+  }
+}

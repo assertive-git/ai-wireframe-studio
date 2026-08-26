@@ -1,0 +1,4261 @@
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>AI LP Wireframe Studio - UI Prototype</title>
+  <style>
+    :root {
+      --bg: #edf2f7;
+      --panel: #fff;
+      --line: #dbe3ee;
+      --line2: #c9d4e3;
+      --text: #172238;
+      --muted: #6d7b90;
+      --blue: #315efb;
+      --blue-soft: #eef2ff;
+      --green: #118658;
+      --green-soft: #e8f7f0;
+      --nav: #0f1b33;
+      --shadow: 0 12px 30px rgba(20, 32, 56, .09);
+    }
+
+    * {
+      box-sizing: border-box
+    }
+
+    html,
+    body {
+      height: 100%;
+      margin: 0
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Noto Sans JP", sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      font-size: 14px
+    }
+
+    button,
+    input,
+    textarea,
+    select {
+      font: inherit
+    }
+
+    button {
+      cursor: pointer
+    }
+
+    .app {
+      height: 100%;
+      display: grid;
+      grid-template-rows: 58px 1fr;
+      overflow: hidden
+    }
+
+    .topbar {
+      background: #fff;
+      border-bottom: 1px solid var(--line);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 18px;
+      z-index: 10
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-weight: 700;
+      letter-spacing: .01em
+    }
+
+    .brandmark {
+      width: 30px;
+      height: 30px;
+      border-radius: 8px;
+      background: linear-gradient(145deg, #315efb, #6d58ec);
+      color: #fff;
+      display: grid;
+      place-items: center;
+      font-size: 12px;
+    }
+
+    .project {
+      font-size: 12px;
+      color: var(--muted);
+      font-weight: 600;
+      margin-left: 6px
+    }
+
+    .top-actions {
+      display: flex;
+      align-items: center;
+      gap: 8px
+    }
+
+    .btn {
+      height: 32px;
+      border: 1px solid #c8d2e1;
+      background: #fff;
+      border-radius: 8px;
+      padding: 0 12px;
+      font-weight: 700;
+      color: var(--text)
+    }
+
+    .btn.primary {
+      background: #315efb;
+      border-color: #315efb;
+      color: #fff
+    }
+
+    .btn.soft {
+      background: #eef2ff;
+      border-color: #c4ceff;
+      color: #2b4bc0
+    }
+
+    .saved {
+      font-size: 12px;
+      color: var(--success);
+      padding-right: 4px
+    }
+
+    .layout {
+      min-height: 0;
+      display: grid;
+      grid-template-columns: 68px 1fr
+    }
+
+    .navrail {
+      background: #111827;
+      color: #d7dce5;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 10px 0;
+      gap: 8px
+    }
+
+    .navitem {
+      width: 50px;
+      min-height: 48px;
+      border: 0;
+      border-radius: 10px;
+      background: transparent;
+      color: inherit;
+      font-size: 10px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 4px
+    }
+
+    .navitem .ico {
+      font-size: 18px
+    }
+
+    .navitem.active {
+      background: #263143;
+      color: #fff
+    }
+
+    .nav-spacer {
+      flex: 1
+    }
+
+    .content {
+      min-width: 0;
+      min-height: 0;
+      position: relative
+    }
+
+    .view {
+      display: none;
+      height: 100%;
+      overflow: auto
+    }
+
+    .view.active {
+      display: block
+    }
+
+    .sidebar {
+      background: #fff;
+      border-right: 1px solid var(--line);
+      display: flex;
+      flex-direction: column;
+      min-height: 0
+    }
+
+    .sidehead {
+      height: 58px;
+      padding: 0 12px;
+      border-bottom: 1px solid var(--line);
+      display: flex;
+      align-items: flex-end;
+      justify-content: space-between
+    }
+
+    .sidehead h2 {
+      font-size: 13px;
+      margin: 0 0 10px
+    }
+
+    .sidehead span {
+      font-size: 10px;
+      color: var(--muted);
+      margin-bottom: 11px
+    }
+
+    .tabs {
+      display: flex;
+      gap: 6px;
+      padding: 9px 10px 0
+    }
+
+    .tab {
+      height: 28px;
+      padding: 0 10px;
+      border: 1px solid #c8d2e1;
+      background: #fff;
+      border-radius: 8px;
+      font-size: 11px;
+      color: #56647b
+    }
+
+    .tab.active {
+      background: #eef2ff;
+      border-color: #bfcaff;
+      color: #2949bf;
+      font-weight: 700
+    }
+
+    .sectionlist {
+      overflow: auto;
+      padding: 10px
+    }
+
+    .section {
+      border: 1px solid var(--line);
+      border-radius: 10px;
+      padding: 11px 12px;
+      margin-bottom: 8px;
+      background: #fff;
+      position: relative
+    }
+
+    .section.active {
+      border-color: #8fa5ff;
+      background: #f5f7ff
+    }
+
+    .section strong {
+      display: block;
+      font-size: 12px;
+      margin-bottom: 4px
+    }
+
+    .section span {
+      display: block;
+      font-size: 10px;
+      color: var(--muted)
+    }
+
+    .section .mode {
+      position: absolute;
+      right: 8px;
+      top: 8px;
+      font-size: 8px;
+      background: #eaf0ff;
+      color: #3556d2;
+      padding: 3px 6px;
+      border-radius: 999px;
+      font-weight: 800
+    }
+
+    .sec-add {
+      width: 100%;
+      height: 40px;
+      border: 1px dashed #b7c4d6;
+      background: #fafbfd;
+      border-radius: 10px;
+      color: #6f7e93;
+      font-weight: 700
+    }
+
+    /* dashboard */
+    .dashboard {
+      padding: 30px 34px
+    }
+
+    .pagehead {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-end;
+      margin-bottom: 22px
+    }
+
+    .pagehead h1 {
+      font-size: 25px;
+      margin: 0 0 6px
+    }
+
+    .pagehead p {
+      margin: 0;
+      color: var(--muted);
+      font-size: 14px
+    }
+
+    .metrics {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 12px;
+      margin-bottom: 22px
+    }
+
+    .metric {
+      background: #fff;
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      padding: 16px
+    }
+
+    .metric strong {
+      font-size: 24px;
+      display: block;
+      margin-top: 6px
+    }
+
+    .metric span {
+      font-size: 12px;
+      color: var(--muted)
+    }
+
+    .projects {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(240px, 1fr));
+      gap: 16px
+    }
+
+    .project {
+      background: #fff;
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      overflow: hidden;
+      box-shadow: 0 3px 12px rgba(25, 34, 50, .03)
+    }
+
+    .project-preview {
+      height: 160px;
+      background: #eef1f5;
+      padding: 14px;
+      display: flex;
+      gap: 8px
+    }
+
+    .mini-page {
+      background: #fff;
+      border: 1px solid #d8dee8;
+      border-radius: 5px;
+      flex: 1;
+      padding: 8px
+    }
+
+    .mini-line {
+      height: 6px;
+      border-radius: 3px;
+      background: #dce2ea;
+      margin-bottom: 6px
+    }
+
+    .mini-line.short {
+      width: 55%
+    }
+
+    .mini-block {
+      height: 48px;
+      background: #e8edf3;
+      border-radius: 4px;
+      margin: 8px 0
+    }
+
+    .project-info {
+      padding: 15px
+    }
+
+    .project-info h3 {
+      font-size: 15px;
+      margin: 0 0 6px
+    }
+
+    .project-info p {
+      font-size: 12px;
+      color: var(--muted);
+      margin: 0 0 12px
+    }
+
+    .tag {
+      font-size: 11px;
+      padding: 4px 7px;
+      border-radius: 20px;
+      background: var(--accent-soft);
+      color: #3347a4;
+      display: inline-block
+    }
+
+    /* intake */
+    .intake {
+      max-width: 1000px;
+      margin: 0 auto;
+      padding: 28px 30px 60px
+    }
+
+    .steps {
+      display: flex;
+      align-items: center;
+      margin: 20px 0 28px
+    }
+
+    .step {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 12px;
+      color: var(--muted)
+    }
+
+    .step-num {
+      width: 25px;
+      height: 25px;
+      border-radius: 50%;
+      border: 1px solid #c8d2e1;
+      display: grid;
+      place-items: center;
+      background: #fff
+    }
+
+    .step.active {
+      color: #315efb;
+      font-weight: 600;
+    }
+
+    .step.active .step-num {
+      background: #315efb;
+      color: #fff;
+      border-color: #315efb
+    }
+
+    .step-line {
+      height: 1px;
+      background: #c8d2e1;
+      flex: 1;
+      margin: 0 12px
+    }
+
+    .form-card {
+      background: #fff;
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      padding: 24px;
+      box-shadow: var(--shadow)
+    }
+
+    .form-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 18px
+    }
+
+    .card {
+      background: #fff;
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow)
+    }
+
+    .form-card {
+      padding: 23px
+    }
+
+    .form-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 17px;
+    }
+
+    .field {
+      display: flex;
+      flex-direction: column;
+      gap: 7px
+    }
+
+    .field.full {
+      grid-column: 1/-1;
+    }
+
+    label {
+      font-size: 12px;
+      font-weight: 750
+    }
+
+    input,
+    textarea,
+    select {
+      width: 100%;
+      border: 1px solid #c8d2e1;
+      border-radius: 8px;
+      padding: 10px 11px;
+      color: var(--text);
+      outline: none;
+      background: #fff;
+    }
+
+    textarea {
+      min-height: 92px;
+      resize: vertical
+    }
+
+    input:focus,
+    textarea:focus,
+    select:focus {
+      border-color: #97aaff;
+      box-shadow: 0 0 0 3px #edf0ff;
+    }
+
+    .chips {
+      display: flex;
+      gap: 7px;
+      flex-wrap: wrap;
+    }
+
+    .chip {
+      height: 34px;
+      border: 1px solid #c8d2e1;
+      background: #fff;
+      border-radius: 19px;
+      padding: 0 12px;
+      font-size: 12px;
+    }
+
+    .dropzone {
+      border: 1.5px dashed #aeb9c9;
+      border-radius: 10px;
+      background: #fafbfd;
+      min-height: 92px;
+      display: grid;
+      place-items: center;
+      padding: 24px;
+      text-align: center;
+      color: var(--muted);
+    }
+
+    .dropzone small {
+      display: block;
+      margin-top: 5px
+    }
+
+    .form-foot {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-top: 21px
+    }
+
+    .form-note {
+      font-size: 11px;
+      color: var(--muted)
+    }
+
+    .field {
+      display: flex;
+      flex-direction: column;
+      gap: 7px
+    }
+
+    .field.full {
+      grid-column: 1/-1
+    }
+
+    .hint {
+      font-size: 11px;
+      color: var(--muted);
+      font-weight: 400
+    }
+
+    .chip.active {
+      border-color: #315efb;
+      background: var(--accent-soft);
+      color: #2748bf
+    }
+
+    .form-footer {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-top: 22px
+    }
+
+    .shell {
+      min-height: 0;
+      display: grid;
+      grid-template-columns: 66px 1fr
+    }
+
+    /* Hearing view */
+    .hearing-layout {
+      height: calc(100% - 62px);
+      display: grid;
+      grid-template-columns: 285px minmax(500px, 1fr) 330px;
+      min-height: 0;
+    }
+
+    .side {
+      background: #fff;
+      min-height: 0;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .side.left {
+      border-right: 1px solid var(--line);
+    }
+
+    .side.right {
+      border-left: 1px solid var(--line);
+    }
+
+    .side-head {
+      height: 48px;
+      flex: 0 0 auto;
+      border-bottom: 1px solid var(--line);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 13px;
+    }
+
+    .side-head h3 {
+      font-size: 12px;
+      margin: 0;
+    }
+
+    .side-count {
+      font-size: 10px;
+      color: var(--muted);
+    }
+
+    .side-body {
+      overflow: auto;
+      padding: 12px;
+    }
+
+    .summary-block {
+      border: 1px solid var(--line);
+      border-radius: 9px;
+      padding: 11px;
+      margin-bottom: 9px;
+      background: #fff;
+    }
+
+    .summary-block h4 {
+      font-size: 11px;
+      margin: 0 0 6px;
+    }
+
+    .summary-block p {
+      font-size: 11px;
+      line-height: 1.55;
+      color: #526078;
+      margin: 0;
+    }
+
+    .summary-block .edit {
+      display: inline-block;
+      margin-top: 7px;
+      color: #315efb;
+      font-size: 10px;
+    }
+
+    .file-row {
+      border: 1px solid var(--line);
+      border-radius: 9px;
+      padding: 9px;
+      margin-bottom: 8px;
+      display: grid;
+      grid-template-columns: 42px 1fr;
+      gap: 9px;
+      align-items: center;
+    }
+
+    .file-thumb {
+      width: 42px;
+      height: 48px;
+      border-radius: 5px;
+      background: #e8edf4;
+      display: grid;
+      place-items: center;
+      font-size: 9px;
+      color: #748196;
+    }
+
+    .file-row strong {
+      display: block;
+      font-size: 10px;
+      margin-bottom: 3px;
+    }
+
+    .file-row span {
+      font-size: 9px;
+      color: var(--muted);
+    }
+
+    .file-tags {
+      display: flex;
+      gap: 4px;
+      margin-top: 5px;
+    }
+
+    .file-tag {
+      font-size: 8px;
+      padding: 3px 5px;
+      border-radius: 9px;
+      background: #f1f4f8;
+      color: #566277;
+    }
+
+    .add-file {
+      width: 100%;
+      border: 1px dashed #aeb9c9;
+      background: #fafbfd;
+      border-radius: 9px;
+      padding: 9px;
+      color: var(--muted);
+      font-size: 11px;
+    }
+
+    .info-note {
+      font-size: 10px;
+      line-height: 1.5;
+      color: var(--muted);
+      padding: 8px 2px;
+    }
+
+    /* Chat center */
+    .chat-area {
+      min-width: 0;
+      min-height: 0;
+      display: flex;
+      flex-direction: column;
+      background: #f5f7fb;
+    }
+
+    .chat-top {
+      height: 48px;
+      background: #fff;
+      border-bottom: 1px solid var(--line);
+      flex: 0 0 auto;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 14px;
+      ;
+    }
+
+    .ai-status {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 12px;
+      font-weight: 700;
+    }
+
+    .ai-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: var(--green);
+      box-shadow: 0 0 0 4px var(--green-soft);
+    }
+
+    .chat-top small {
+      font-size: 10px;
+      color: var(--muted);
+    }
+
+    .chat-scroll {
+      flex: 1;
+      overflow: auto;
+      padding: 18px 20px 25px;
+    }
+
+    .msg-wrap {
+      display: flex;
+      gap: 9px;
+      margin-bottom: 14px;
+      align-items: flex-start;
+    }
+
+    .avatar {
+      width: 30px;
+      height: 30px;
+      border-radius: 9px;
+      display: grid;
+      place-items: center;
+      flex: 0 0 auto;
+      background: #1f2937;
+      color: #fff;
+      font-size: 10px;
+      font-weight: 800;
+      ;
+    }
+
+    .msg {
+      max-width: 760px;
+      background: #fff;
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      padding: 13px 14px;
+      box-shadow: 0 3px 10px rgba(42, 54, 76, .04);
+      font-size: 12px;
+      line-height: 1.7;
+    }
+
+    .msg p {
+      margin: 0 0 9px;
+    }
+
+    .msg p:last-child {
+      margin-bottom: 0;
+    }
+
+    .msg ul {
+      margin: 6px 0 0;
+      padding-left: 19px;
+      color: #4f5d71;
+    }
+
+    .msg-user {
+      justify-content: flex-end;
+    }
+
+    .msg-user .msg {
+      background: #eef2ff;
+      border-color: #d7dfff;
+    }
+
+    .question-card {
+      max-width: 790px;
+      margin: 0 0 16px 39px;
+      background: #fff;
+      border: 1px solid #cbd5ff;
+      border-radius: 12px;
+      box-shadow: 0 6px 18px rgba(49, 94, 251, .07);
+      overflow: hidden;
+    }
+
+    .question-head {
+      background: #f5f7ff;
+      border-bottom: 1px solid #dfe5ff;
+      padding: 10px 13px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .question-head strong {
+      font-size: 11px;
+      color: #3049ad;
+    }
+
+    .question-head span {
+      font-size: 9px;
+      color: var(--muted);
+    }
+
+    .question-body {
+      padding: 14px;
+    }
+
+    .q-title {
+      font-size: 13px;
+      font-weight: 800;
+      margin-bottom: 5px;
+    }
+
+    .q-help {
+      font-size: 10px;
+      color: var(--muted);
+      margin-bottom: 10px;
+    }
+
+    .option-grid {
+      display: flex;
+      gap: 7px;
+      flex-wrap: wrap;
+      margin-bottom: 11px;
+    }
+
+    .option {
+      border: 1px solid #c8d2e1;
+      background: #fff;
+      border-radius: 18px;
+      padding: 7px 10px;
+      font-size: 11px;
+      color: #445168;
+    }
+
+    .option.selected {
+      border-color: #315efb;
+      background: #eef2ff;
+      color: #2448c2;
+      font-weight: 700;
+    }
+
+    .mini-text {
+      min-height: 62px;
+      font-size: 11px;
+    }
+
+    .q-divider {
+      height: 1px;
+      background: var(--line);
+      margin: 13px 0;
+    }
+
+    .question-foot {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-top: 12px;
+    }
+
+    .skip {
+      font-size: 10px;
+      color: var(--muted);
+      border: 0;
+      background: transparent;
+    }
+
+    .chat-composer {
+      flex: 0 0 auto;
+      background: #fff;
+      border-top: 1px solid var(--line);
+      padding: 11px 14px;
+    }
+
+    .composer-box {
+      border: 1px solid #c8d2e1;
+      border-radius: 10px;
+      padding: 9px;
+      background: #fff;
+    }
+
+    .composer-box textarea {
+      border: 0;
+      padding: 0;
+      min-height: 50px;
+      box-shadow: none;
+      font-size: 11px;
+    }
+
+    .composer-actions {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-top: 7px;
+    }
+
+    .attach {
+      font-size: 10px;
+      color: var(--muted);
+    }
+
+    /* Right understanding panel */
+    .progress-card {
+      border: 1px solid var(--line);
+      border-radius: 10px;
+      padding: 12px;
+      margin-bottom: 10px;
+      background: #fff;
+    }
+
+    .progress-top {
+      display: flex;
+      align-items: flex-end;
+      justify-content: space-between;
+      margin-bottom: 8px;
+    }
+
+    .progress-top strong {
+      font-size: 12px;
+    }
+
+    .progress-top b {
+      font-size: 20px;
+      color: #315efb;
+    }
+
+    .progress-track {
+      height: 7px;
+      background: #e9edf4;
+      border-radius: 5px;
+      overflow: hidden;
+    }
+
+    .progress-bar {
+      height: 100%;
+      width: 48%;
+      background: #315efb;
+      border-radius: 5px;
+      transition: .3s;
+    }
+
+    .checklist {
+      margin-top: 11px;
+      display: grid;
+      gap: 7px;
+    }
+
+    .check {
+      display: grid;
+      grid-template-columns: 18px 1fr auto;
+      align-items: center;
+      gap: 6px;
+      font-size: 10px;
+      color: #4e5b70;
+    }
+
+    .check i {
+      font-style: normal;
+      width: 17px;
+      height: 17px;
+      border-radius: 50%;
+      display: grid;
+      place-items: center;
+      background: #edf1f6;
+      color: #8490a2;
+      font-size: 9px;
+    }
+
+    .check.done i {
+      background: var(--green-soft);
+      color: var(--green);
+    }
+
+    .check.active i {
+      background: #eef2ff;
+      color: #315efb;
+    }
+
+    .check em {
+      font-style: normal;
+      font-size: 9px;
+      color: var(--muted);
+    }
+
+    .understanding {
+      border: 1px solid var(--line);
+      border-radius: 10px;
+      margin-bottom: 10px;
+      overflow: hidden;
+    }
+
+    .understanding h4 {
+      margin: 0;
+      padding: 9px 11px;
+      background: #f8fafc;
+      border-bottom: 1px solid var(--line);
+      font-size: 10px;
+    }
+
+    .understanding dl {
+      margin: 0;
+      padding: 10px 11px;
+    }
+
+    .understanding dt {
+      font-size: 9px;
+      color: var(--muted);
+      margin-bottom: 3px;
+    }
+
+    .understanding dd {
+      font-size: 11px;
+      line-height: 1.5;
+      margin: 0 0 9px;
+    }
+
+    .understanding dd:last-child {
+      margin-bottom: 0;
+    }
+
+    .unresolved {
+      background: #fff4df;
+      border: 1px solid #f2d699;
+      border-radius: 9px;
+      padding: 10px;
+      margin-bottom: 10px;
+    }
+
+    .unresolved strong {
+      display: block;
+      font-size: 10px;
+      color: #7a4b00;
+      margin-bottom: 5px;
+    }
+
+    .unresolved p {
+      font-size: 10px;
+      line-height: 1.5;
+      color: #805a1c;
+      margin: 0;
+    }
+
+    .right-foot {
+      margin-top: auto;
+      border-top: 1px solid var(--line);
+      padding: 11px;
+      display: grid;
+      gap: 7px;
+    }
+
+    .right-foot .btn {
+      width: 100%;
+    }
+
+    /* Common step header */
+    .flow-head {
+      height: 62px;
+      background: #fff;
+      border-bottom: 1px solid var(--line);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 22px;
+    }
+
+    .flow-title h1 {
+      font-size: 17px;
+      margin: 0 0 3px;
+    }
+
+    .flow-title p {
+      font-size: 11px;
+      color: var(--muted);
+      margin: 0;
+    }
+
+    .steps {
+      display: flex;
+      align-items: center;
+      min-width: 530px;
+    }
+
+    .step {
+      display: flex;
+      align-items: center;
+      gap: 7px;
+      color: #8994a5;
+      font-size: 11px;
+      white-space: nowrap;
+    }
+
+    .step i {
+      font-style: normal;
+      width: 24px;
+      height: 24px;
+      border-radius: 50%;
+      border: 1px solid #c8d2e1;
+      display: grid;
+      place-items: center;
+      background: #fff;
+      font-weight: 700;
+      ;
+    }
+
+    .step.done {
+      color: var(--green);
+    }
+
+    .step.done i {
+      background: var(--green-soft);
+      border-color: #bfe8d3;
+    }
+
+    .step.active {
+      color: #315efb;
+      font-weight: 700;
+    }
+
+    .step.active i {
+      background: #315efb;
+      color: #fff;
+      border-color: #315efb;
+    }
+
+    .step-line {
+      height: 1px;
+      background: #c8d2e1;
+      flex: 1;
+      margin: 0 10px;
+      min-width: 30px;
+    }
+
+    /* Generating */
+    .generating {
+      height: 100%;
+      display: grid;
+      place-items: center;
+      padding: 30px;
+    }
+
+    .generate-card {
+      width: min(680px, 90vw);
+      padding: 32px;
+      text-align: center;
+    }
+
+    .generate-icon {
+      width: 58px;
+      height: 58px;
+      border-radius: 18px;
+      background: var(--blue-soft);
+      color: var(--blue);
+      display: grid;
+      place-items: center;
+      margin: 0 auto 15px;
+      font-size: 24px;
+    }
+
+    .generate-card h2 {
+      font-size: 20px;
+      margin: 0 0 7px;
+    }
+
+    .generate-card p {
+      font-size: 11px;
+      color: var(--muted);
+      margin: 0;
+    }
+
+    .generate-list {
+      margin: 22px auto 0;
+      max-width: 460px;
+      text-align: left;
+      display: grid;
+      gap: 10px;
+    }
+
+    .gen-row {
+      border: 1px solid var(--line);
+      border-radius: 9px;
+      padding: 10px 12px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 11px;
+    }
+
+    .gen-row i {
+      font-style: normal;
+      color: var(--green);
+    }
+
+    .gen-row.running {
+      border-color: #b9c7ff;
+      background: #f6f8ff;
+    }
+
+    .gen-row.running i {
+      color: var(--blue);
+    }
+
+    .loader {
+      height: 7px;
+      background: #e9edf4;
+      border-radius: 8px;
+      overflow: hidden;
+      margin: 22px auto 0;
+      max-width: 460px;
+    }
+
+    .loader div {
+      width: 72%;
+      height: 100%;
+      background: var(--blue);
+      border-radius: 8px;
+      animation: load 2.1s ease-in-out infinite;
+    }
+
+    @keyframes load {
+      0% {
+        width: 12%;
+      }
+
+      55% {
+        width: 72%;
+      }
+
+      100% {
+        width: 96%;
+      }
+    }
+
+    /* Workspace brief placeholder */
+    .workspace {
+      height: calc(100% - 62px);
+      display: grid;
+      grid-template-columns: 250px minmax(530px, 1fr) 340px;
+      min-height: 0;
+    }
+
+    .w-left,
+    .w-right {
+      background: #fff;
+      min-height: 0;
+    }
+
+    .w-left {
+      border-right: 1px solid var(--line);
+    }
+
+    .w-right {
+      border-left: 1px solid var(--line);
+    }
+
+    .w-head {
+      height: 48px;
+      border-bottom: 1px solid var(--line);
+      padding: 0 12px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      font-size: 12px;
+      font-weight: 700;
+    }
+
+    .section-list {
+      padding: 10px;
+      overflow: auto;
+    }
+
+    .section-item {
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      padding: 9px;
+      margin-bottom: 7px;
+      font-size: 11px;
+    }
+
+    .section-item.active {
+      border-color: #91a5ff;
+      background: #f6f8ff;
+    }
+
+    .canvas {
+      background: #edf1f6;
+      overflow: auto;
+      padding: 27px;
+    }
+
+    .page {
+      width: 720px;
+      min-height: 920px;
+      background: #fff;
+      margin: 0 auto;
+      border: 1px solid #ccd4df;
+      box-shadow: var(--shadow);
+    }
+
+    .wire-head {
+      height: 70px;
+      border-bottom: 1px solid var(--line);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 30px;
+    }
+
+    .logo {
+      border: 1px solid #bac5d4;
+      padding: 9px 17px;
+      font-weight: 700;
+    }
+
+    .navlinks {
+      display: flex;
+      gap: 15px;
+      font-size: 9px;
+      color: var(--muted);
+    }
+
+    .hero {
+      display: grid;
+      grid-template-columns: 1.05fr .95fr;
+      gap: 25px;
+      padding: 45px 38px;
+      background: #f7f8fa;
+      border-bottom: 1px dashed #ccd4df;
+    }
+
+    .hero h2 {
+      font-size: 30px;
+      line-height: 1.4;
+      margin: 9px 0;
+    }
+
+    .eyebrow {
+      font-size: 10px;
+      color: #5d6980;
+      letter-spacing: .08em;
+    }
+
+    .image-box {
+      height: 220px;
+      background: #e3e7ed;
+      border: 1px solid #c7ced8;
+      border-radius: 5px;
+      display: grid;
+      place-items: center;
+      font-size: 11px;
+      color: #6d788a;
+    }
+
+    .line {
+      height: 7px;
+      background: #d9dfe7;
+      border-radius: 4px;
+      margin: 7px 0;
+    }
+
+    .line.s {
+      width: 68%;
+    }
+
+    .awards {
+      padding: 38px;
+    }
+
+    .awards h3 {
+      text-align: center;
+      font-size: 20px;
+    }
+
+    .award-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 12px;
+      margin-top: 20px;
+    }
+
+    .award {
+      border: 1px solid #ccd4df;
+      border-radius: 6px;
+      padding: 10px;
+    }
+
+    .award .ph {
+      height: 85px;
+      background: #e4e8ed;
+      margin-bottom: 10px;
+    }
+
+    .w-chat {
+      padding: 12px;
+      overflow: auto;
+    }
+
+    .w-msg {
+      border: 1px solid var(--line);
+      border-radius: 9px;
+      padding: 10px;
+      font-size: 11px;
+      line-height: 1.6;
+      margin-bottom: 9px;
+    }
+
+    .w-msg.user {
+      background: #eef2ff;
+    }
+
+    @media(max-width:1180px) {
+      .hearing-layout {
+        grid-template-columns: 240px minmax(450px, 1fr) 285px;
+      }
+
+      .workspace {
+        grid-template-columns: 210px minmax(470px, 1fr) 285px;
+      }
+    }
+
+    /* workspace */
+    .workspace {
+      height: 100%;
+      display: grid;
+      grid-template-columns: 270px minmax(500px, 1fr) 360px;
+      grid-template-rows: 1fr 0;
+      transition: .2s
+    }
+
+    .workspace.code-open {
+      grid-template-rows: minmax(360px, 1fr) 260px
+    }
+
+    .leftpanel,
+    .right,
+    .codepanel {
+      background: #fff;
+      min-height: 0
+    }
+
+    .leftpanel {
+      border-right: 1px solid var(--line);
+      display: flex;
+      flex-direction: column
+    }
+
+    .right {
+      border-left: 1px solid var(--line);
+      display: flex;
+      flex-direction: column
+    }
+
+    .panelhead {
+      height: 48px;
+      border-bottom: 1px solid var(--line);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 12px;
+      flex: 0 0 auto
+    }
+
+    .panelhead h3 {
+      font-size: 13px;
+      margin: 0
+    }
+
+    .tabs {
+      display: flex;
+      gap: 3px;
+      background: #f1f3f7;
+      padding: 3px;
+      border-radius: 8px
+    }
+
+    .tab {
+      border: 0;
+      background: transparent;
+      border-radius: 6px;
+      padding: 6px 8px;
+      font-size: 11px;
+      color: var(--muted)
+    }
+
+    .tab.active {
+      background: #fff;
+      color: var(--text);
+      box-shadow: 0 1px 3px rgba(0, 0, 0, .08)
+    }
+
+    .leftbody {
+      overflow: auto;
+      padding: 12px
+    }
+
+    .section-item {
+      border: 1px solid var(--line);
+      border-radius: 9px;
+      margin-bottom: 8px;
+      padding: 10px;
+      background: #fff;
+      position: relative
+    }
+
+    .section-item.active {
+      border-color: #8da2ff;
+      background: #f7f8ff
+    }
+
+    .section-item .row {
+      display: flex;
+      align-items: center;
+      gap: 8px
+    }
+
+    .drag {
+      color: #98a2b3;
+      font-size: 13px
+    }
+
+    .section-title {
+      font-size: 12px;
+      font-weight: 600;
+      flex: 1
+    }
+
+    .eye {
+      font-size: 11px;
+      color: var(--muted)
+    }
+
+    .section-meta {
+      font-size: 10px;
+      color: var(--muted);
+      margin: 6px 0 0 21px
+    }
+
+    .add-section {
+      width: 100%;
+      border: 1px dashed #aeb8c8;
+      background: #fafbfc;
+      border-radius: 9px;
+      padding: 9px;
+      font-size: 12px;
+      color: var(--muted)
+    }
+
+    .asset-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px
+    }
+
+    .asset {
+      height: 78px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: #f0f2f5;
+      display: grid;
+      place-items: center;
+      font-size: 10px;
+      color: var(--muted);
+      overflow: hidden
+    }
+
+    .asset img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover
+    }
+
+    .right {
+      background: #fff;
+      border-left: 1px solid var(--line);
+      display: flex;
+      flex-direction: column;
+      min-height: 0
+    }
+
+    .righthead {
+      height: 58px;
+      border-bottom: 1px solid var(--line);
+      padding: 0 14px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between
+    }
+
+    .righthead h3 {
+      font-size: 13px;
+      margin: 0
+    }
+
+    .ver {
+      font-size: 10px;
+      color: var(--green);
+      font-weight: 800
+    }
+
+    .paneltabs {
+      display: flex;
+      gap: 6px;
+      padding: 10px 12px;
+      border-bottom: 1px solid var(--line)
+    }
+
+    .ptab {
+      height: 30px;
+      padding: 0 10px;
+      border: 1px solid #c8d2e1;
+      background: #fff;
+      border-radius: 8px;
+      font-size: 11px;
+      font-weight: 700;
+      color: #5c6a80
+    }
+
+    .ptab.active {
+      background: #eef2ff;
+      border-color: #bfcaff;
+      color: #2949bf
+    }
+
+    .panelbody {
+      padding: 12px;
+      overflow: auto
+    }
+
+    .block {
+      border: 1px solid var(--line);
+      border-radius: 10px;
+      padding: 12px;
+      margin-bottom: 10px;
+      background: #fff
+    }
+
+    .block h4 {
+      font-size: 11px;
+      margin: 0 0 8px
+    }
+
+    .block p {
+      font-size: 10px;
+      line-height: 1.6;
+      color: var(--muted);
+      margin: 0
+    }
+
+    .target {
+      border: 1px solid #bdc9ff;
+      background: #f7f8ff;
+      border-radius: 10px;
+      padding: 10px 11px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center
+    }
+
+    .target strong {
+      display: block;
+      font-size: 12px
+    }
+
+    .target span {
+      display: block;
+      font-size: 10px;
+      color: #5a6880;
+      margin-top: 2px
+    }
+
+    .target button {
+      height: 28px;
+      border: 1px solid #c8d2e1;
+      background: #fff;
+      border-radius: 7px;
+      font-size: 10px
+    }
+
+    .modechips {
+      display: flex;
+      gap: 6px;
+      flex-wrap: wrap
+    }
+
+    .modechips button {
+      height: 30px;
+      border: 1px solid #c8d2e1;
+      background: #fff;
+      border-radius: 16px;
+      padding: 0 10px;
+      font-size: 10px;
+      font-weight: 700;
+      color: #516079
+    }
+
+    .modechips button.active {
+      background: #eef2ff;
+      border-color: #bfcaff;
+      color: #2949bf
+    }
+
+    .label {
+      display: block;
+      font-size: 10px;
+      color: #5f6e83;
+      margin-bottom: 5px;
+      font-weight: 700
+    }
+
+    .input,
+    .select,
+    .textarea {
+      width: 100%;
+      border: 1px solid #c8d2e1;
+      border-radius: 8px;
+      padding: 8px 9px;
+      background: #fff;
+      font-size: 11px;
+      color: var(--text)
+    }
+
+    .textarea {
+      min-height: 92px;
+      resize: vertical
+    }
+
+    .row2 {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px
+    }
+
+    .checks {
+      display: grid;
+      gap: 7px
+    }
+
+    .checkrow {
+      display: flex;
+      align-items: flex-start;
+      gap: 7px;
+      font-size: 10px;
+      color: #4d5b72;
+      line-height: 1.5
+    }
+
+    .checkrow input {
+      margin-top: 2px;
+      width: fit-content;
+    }
+
+    .copybox {
+      border: 1px solid var(--line);
+      border-radius: 9px;
+      padding: 9px;
+      background: #fafbfd
+    }
+
+    .copyrow {
+      display: grid;
+      grid-template-columns: 70px 1fr;
+      gap: 8px;
+      margin-bottom: 7px
+    }
+
+    .copyrow:last-child {
+      margin-bottom: 0
+    }
+
+    .copyrow b {
+      font-size: 9px;
+      color: #77869a
+    }
+
+    .copyrow span {
+      font-size: 10px;
+      line-height: 1.5
+    }
+
+    .ref-list {
+      display: grid;
+      gap: 7px
+    }
+
+    .ref {
+      display: grid;
+      grid-template-columns: 42px 1fr auto;
+      gap: 8px;
+      align-items: center;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      padding: 7px
+    }
+
+    .refthumb {
+      width: 42px;
+      height: 42px;
+      border-radius: 6px;
+      background: #e6ebf2;
+      display: grid;
+      place-items: center;
+      font-size: 8px;
+      color: #708099
+    }
+
+    .ref strong {
+      display: block;
+      font-size: 10px
+    }
+
+    .ref span {
+      display: block;
+      font-size: 9px;
+      color: var(--muted)
+    }
+
+    .ref button {
+      height: 26px;
+      border: 1px solid #c8d2e1;
+      background: #fff;
+      border-radius: 7px;
+      padding: 0 8px;
+      font-size: 10px
+    }
+
+    .result-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 8px
+    }
+
+    .result-head strong {
+      font-size: 11px
+    }
+
+    .result-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px
+    }
+
+    .thumb {
+      border: 1px solid var(--line);
+      border-radius: 10px;
+      overflow: hidden;
+      background: #fff
+    }
+
+    .thumb .img {
+      height: 95px;
+      background:
+        linear-gradient(90deg, rgba(255, 255, 255, .95), rgba(255, 255, 255, .35)),
+        linear-gradient(135deg, #edf3ff, #a9bddb);
+      position: relative;
+      padding: 12px
+    }
+
+    .thumb .img .copymini {
+      font-size: 8px;
+      color: #3153cb;
+      font-weight: 800;
+      margin-bottom: 5px
+    }
+
+    .thumb .img .titlemini {
+      font-size: 13px;
+      font-weight: 900;
+      line-height: 1.3
+    }
+
+    .thumb .img .shape {
+      position: absolute;
+      right: 15px;
+      bottom: 0;
+      width: 40px;
+      height: 72px;
+      border-radius: 25px 25px 5px 5px;
+      background: rgba(255, 255, 255, .62)
+    }
+
+    .thumb .img .shape.s2 {
+      right: 46px;
+      height: 60px;
+      background: rgba(255, 255, 255, .48)
+    }
+
+    .thumb .meta {
+      padding: 8px
+    }
+
+    .thumb .meta strong {
+      display: block;
+      font-size: 10px
+    }
+
+    .thumb .meta span {
+      display: block;
+      font-size: 9px;
+      line-height: 1.4;
+      color: var(--muted);
+      margin-top: 3px
+    }
+
+    .thumb .actions {
+      display: flex;
+      gap: 5px;
+      margin-top: 7px
+    }
+
+    .thumb .actions button {
+      flex: 1;
+      height: 28px;
+      border: 1px solid #c8d2e1;
+      background: #fff;
+      border-radius: 7px;
+      font-size: 10px;
+      font-weight: 700
+    }
+
+    .thumb .actions .primary {
+      background: #315efb;
+      border-color: #315efb;
+      color: #fff;
+      font-size: 7px;
+    }
+
+    .notice {
+      font-size: 10px;
+      line-height: 1.6;
+      color: #68778c;
+      background: #f8fafc;
+      border: 1px solid var(--line);
+      border-radius: 9px;
+      padding: 10px
+    }
+
+    .footer-actions {
+      border-top: 1px solid var(--line);
+      padding: 10px 12px;
+      display: flex;
+      gap: 8px
+    }
+
+    .footer-actions .btn {
+      flex: 1;
+      font-size: 12px;
+    }
+
+    /* reference LP screenshots */
+    .ref-toolbar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 10px
+    }
+
+    .ref-toolbar span {
+      font-size: 10px;
+      color: var(--muted)
+    }
+
+    .ref-card {
+      border: 1px solid var(--line);
+      border-radius: 10px;
+      background: #fff;
+      overflow: hidden;
+      margin-bottom: 11px;
+      transition: .15s
+    }
+
+    .ref-card:hover {
+      border-color: #93a5f6;
+      box-shadow: 0 5px 14px rgba(34, 43, 60, .08)
+    }
+
+    .ref-thumb {
+      height: 148px;
+      background: #e9edf2;
+      overflow: hidden;
+      position: relative;
+      cursor: pointer
+    }
+
+    .ref-thumb img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      object-position: top;
+      display: block
+    }
+
+    .ref-thumb::after {
+      content: 'クリックして全体表示';
+      position: absolute;
+      inset: auto 7px 7px 7px;
+      padding: 5px 7px;
+      background: rgba(17, 24, 39, .78);
+      color: #fff;
+      border-radius: 5px;
+      font-size: 9px;
+      text-align: center;
+      opacity: 0;
+      transition: .15s
+    }
+
+    .ref-thumb:hover::after {
+      opacity: 1
+    }
+
+    .ref-info {
+      padding: 9px 10px
+    }
+
+    .ref-title-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 7px
+    }
+
+    .ref-title {
+      font-size: 11px;
+      font-weight: 700;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis
+    }
+
+    .ref-origin {
+      font-size: 8px;
+      color: #2d5fc6;
+      background: #edf3ff;
+      border-radius: 12px;
+      padding: 3px 5px;
+      flex: 0 0 auto
+    }
+
+    .ref-url {
+      font-size: 9px;
+      color: var(--muted);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      margin-top: 4px
+    }
+
+    .ref-tags {
+      display: flex;
+      gap: 4px;
+      flex-wrap: wrap;
+      margin-top: 7px
+    }
+
+    .ref-tag {
+      font-size: 8px;
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      padding: 3px 5px;
+      color: #526078;
+      background: #fafbfc
+    }
+
+    .ref-actions {
+      display: flex;
+      gap: 5px;
+      margin-top: 8px
+    }
+
+    .ref-actions button {
+      flex: 1;
+      border: 1px solid #c8d2e1;
+      background: #fff;
+      border-radius: 6px;
+      padding: 5px;
+      font-size: 9px;
+      color: #46556a
+    }
+
+    .ref-modal {
+      position: fixed;
+      inset: 0;
+      background: rgba(15, 23, 42, .66);
+      z-index: 50;
+      display: none;
+      padding: 24px
+    }
+
+    .ref-modal.open {
+      display: grid;
+      place-items: center
+    }
+
+    .ref-dialog {
+      width: min(1180px, 96vw);
+      height: min(820px, 92vh);
+      background: #fff;
+      border-radius: 14px;
+      overflow: hidden;
+      display: grid;
+      grid-template-columns: minmax(520px, 1fr) 330px;
+      box-shadow: 0 24px 70px rgba(0, 0, 0, .28)
+    }
+
+    .ref-viewer {
+      background: #e9edf2;
+      overflow: auto;
+      padding: 24px;
+      position: relative
+    }
+
+    .ref-viewer img {
+      display: block;
+      width: min(760px, 100%);
+      height: auto;
+      margin: 0 auto;
+      background: #fff;
+      box-shadow: 0 8px 25px rgba(28, 39, 55, .15)
+    }
+
+    .ref-detail {
+      border-left: 1px solid var(--line);
+      display: flex;
+      flex-direction: column;
+      min-width: 0
+    }
+
+    .ref-detail-head {
+      height: 54px;
+      padding: 0 14px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border-bottom: 1px solid var(--line)
+    }
+
+    .ref-detail-head strong {
+      font-size: 13px
+    }
+
+    .ref-detail-body {
+      padding: 15px;
+      overflow: auto;
+      font-size: 11px;
+      line-height: 1.65
+    }
+
+    .ref-detail-body h4 {
+      font-size: 12px;
+      margin: 0 0 7px
+    }
+
+    .ref-detail-body p {
+      margin: 0 0 14px;
+      color: #566277
+    }
+
+    .ref-point {
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      padding: 9px;
+      margin-bottom: 8px;
+      background: #fafbfc
+    }
+
+    .ref-point b {
+      display: block;
+      font-size: 10px;
+      margin-bottom: 3px
+    }
+
+    .ref-use {
+      margin-top: auto;
+      padding: 12px;
+      border-top: 1px solid var(--line);
+      display: grid;
+      gap: 7px
+    }
+
+    .ref-use .btn {
+      justify-content: center
+    }
+
+    .canvasarea {
+      min-width: 0;
+      min-height: 0;
+      display: flex;
+      flex-direction: column;
+      background: #edf0f5
+    }
+
+    .canvasbar {
+      height: 48px;
+      border-bottom: 1px solid var(--line);
+      background: #fff;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 12px;
+      flex: 0 0 auto
+    }
+
+    .canvas-controls {
+      display: flex;
+      align-items: center;
+      gap: 6px
+    }
+
+    .divider {
+      height: 22px;
+      width: 1px;
+      background: var(--line);
+      margin: 0 4px
+    }
+
+    .status-pill {
+      font-size: 11px;
+      background: #edf8f1;
+      color: #177245;
+      border-radius: 20px;
+      padding: 5px 8px
+    }
+
+    .canvas-scroll {
+      overflow: auto;
+      padding: 28px 24px 70px;
+      min-height: 0
+    }
+
+    .page-frame {
+      width: 760px;
+      margin: 0 auto;
+      background: #fff;
+      border: 1px solid #cfd6e0;
+      box-shadow: 0 12px 30px rgba(34, 43, 60, .14);
+      min-height: 1250px
+    }
+
+    .wf-section {
+      position: relative;
+      border-bottom: 1px dashed #ccd3dd;
+      padding: 34px 42px;
+      background: #fff
+    }
+
+    .wf-section:hover {
+      outline: 2px solid #7e95ff;
+      outline-offset: -2px
+    }
+
+    .wf-section.selected {
+      outline: 2px solid #315efb;
+      outline-offset: -2px
+    }
+
+    .label {
+      position: absolute;
+      top: 8px;
+      left: 10px;
+      font-size: 9px;
+      color: #667085;
+      background: #f3f5f8;
+      padding: 3px 5px;
+      border-radius: 4px
+    }
+
+    .header-wire {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 18px 32px;
+      border-bottom: 1px solid #e0e4ea
+    }
+
+    .logo-wire {
+      font-weight: 700;
+      border: 1px solid #cfd6e0;
+      padding: 10px 18px
+    }
+
+    .nav-wire {
+      display: flex;
+      gap: 17px;
+      font-size: 10px;
+      color: #667085
+    }
+
+    .cta-wire {
+      border: 1px solid #8fa0b7;
+      border-radius: 4px;
+      padding: 8px 13px;
+      font-size: 10px
+    }
+
+    .hero-wire {
+      display: grid;
+      grid-template-columns: 1.1fr .9fr;
+      gap: 28px;
+      align-items: center;
+      min-height: 310px;
+      background: #f7f8fa
+    }
+
+    .eyebrow {
+      font-size: 11px;
+      letter-spacing: .08em;
+      color: #596579
+    }
+
+    .hero-wire h1 {
+      font-size: 31px;
+      line-height: 1.4;
+      margin: 12px 0
+    }
+
+    .copy-lines div {
+      height: 8px;
+      background: #d8dee7;
+      border-radius: 4px;
+      margin: 8px 0
+    }
+
+    .copy-lines div:nth-child(1) {
+      width: 95%
+    }
+
+    .copy-lines div:nth-child(2) {
+      width: 84%
+    }
+
+    .copy-lines div:nth-child(3) {
+      width: 60%
+    }
+
+    .wire-button {
+      display: inline-block;
+      border: 1px solid #8998ae;
+      padding: 11px 24px;
+      margin-top: 15px;
+      font-size: 11px;
+      border-radius: 4px
+    }
+
+    .image-box {
+      height: 230px;
+      background: #e1e5eb;
+      border: 1px solid #c3cad4;
+      border-radius: 6px;
+      display: grid;
+      place-items: center;
+      color: #697586;
+      font-size: 13px
+    }
+
+    .center-title {
+      text-align: center;
+      margin-bottom: 24px
+    }
+
+    .center-title h2 {
+      font-size: 22px;
+      margin: 7px 0
+    }
+
+    .center-title p {
+      font-size: 11px;
+      color: var(--muted)
+    }
+
+    .cards3 {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 14px
+    }
+
+    .wf-card {
+      border: 1px solid #cfd6e0;
+      border-radius: 6px;
+      padding: 12px
+    }
+
+    .wf-card .thumb {
+      height: 95px;
+      background: #e4e8ed;
+      display: grid;
+      place-items: center;
+      color: #788393;
+      font-size: 10px;
+      margin-bottom: 11px
+    }
+
+    .wf-card h4 {
+      font-size: 13px;
+      margin: 0 0 8px
+    }
+
+    .wf-card p {
+      font-size: 10px;
+      line-height: 1.7;
+      color: #667085;
+      margin: 0
+    }
+
+    .twocol {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 28px;
+      align-items: center
+    }
+
+    .text-skeleton h3 {
+      font-size: 20px;
+      margin: 0 0 14px
+    }
+
+    .small-lines div {
+      height: 7px;
+      background: #dfe4ea;
+      border-radius: 4px;
+      margin: 7px 0
+    }
+
+    .small-lines div:nth-child(3) {
+      width: 70%
+    }
+
+    .note-badge {
+      position: absolute;
+      right: 10px;
+      top: 8px;
+      width: 20px;
+      height: 20px;
+      border-radius: 50%;
+      background: #ffefc5;
+      color: #805100;
+      display: grid;
+      place-items: center;
+      font-size: 10px;
+      font-weight: 700
+    }
+
+    .chat-scroll {
+      flex: 1;
+      overflow: auto;
+      padding: 14px;
+      background: #fafbfc
+    }
+
+    .msg {
+      max-width: 92%;
+      border-radius: 10px;
+      padding: 10px 11px;
+      margin-bottom: 10px;
+      font-size: 12px;
+      line-height: 1.55;
+      border: 1px solid var(--line)
+    }
+
+    .msg.ai {
+      background: #fff
+    }
+
+    .msg.user {
+      background: #eef2ff;
+      border-color: #d6ddff;
+      margin-left: auto
+    }
+
+    .msg .who {
+      font-size: 10px;
+      font-weight: 700;
+      margin-bottom: 4px;
+      color: #526078
+    }
+
+    .change-list {
+      margin: 7px 0 0;
+      padding-left: 16px;
+      color: #4b5565
+    }
+
+    .quick-actions {
+      padding: 9px 12px;
+      border-top: 1px solid var(--line);
+      display: flex;
+      gap: 6px;
+      overflow-x: auto;
+      background: #fff
+    }
+
+    .quick {
+      white-space: nowrap;
+      border: 1px solid #c8d2e1;
+      background: #fff;
+      border-radius: 20px;
+      padding: 6px 9px;
+      font-size: 10px;
+      color: #4d5b70
+    }
+
+    .composer {
+      padding: 11px;
+      border-top: 1px solid var(--line);
+      background: #fff
+    }
+
+    .composer textarea {
+      width: 100%;
+      min-height: 70px;
+      font-size: 12px
+    }
+
+    .composer-foot {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-top: 7px
+    }
+
+    .attach {
+      font-size: 11px;
+      color: var(--muted)
+    }
+
+    .version {
+      font-size: 10px;
+      color: var(--muted)
+    }
+
+    .codepanel {
+      grid-column: 1/-1;
+      border-top: 1px solid var(--line);
+      display: none;
+      min-height: 0
+    }
+
+    .workspace.code-open .codepanel {
+      display: grid;
+      grid-template-columns: 1fr 1fr
+    }
+
+    .codebox {
+      min-width: 0;
+      display: flex;
+      flex-direction: column
+    }
+
+    .codebox:first-child {
+      border-right: 1px solid var(--line)
+    }
+
+    .codehead {
+      height: 36px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 10px;
+      border-bottom: 1px solid var(--line);
+      font-size: 11px
+    }
+
+    pre {
+      margin: 0;
+      flex: 1;
+      overflow: auto;
+      background: #101827;
+      color: #d8dee9;
+      padding: 13px;
+      font: 11px/1.55 ui-monospace, SFMono-Regular, Consolas, monospace;
+      white-space: pre-wrap
+    }
+
+    /* annotations */
+    .spec-drawer {
+      position: fixed;
+      right: 16px;
+      bottom: 16px;
+      width: 330px;
+      background: #fff;
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      box-shadow: 0 16px 45px rgba(17, 24, 39, .2);
+      z-index: 30;
+      display: none;
+      overflow: hidden
+    }
+
+    .spec-drawer.open {
+      display: block
+    }
+
+    .spec-head {
+      padding: 12px 14px;
+      border-bottom: 1px solid var(--line);
+      display: flex;
+      justify-content: space-between;
+      font-size: 13px;
+      font-weight: 700
+    }
+
+    .spec-body {
+      max-height: 430px;
+      overflow: auto;
+      padding: 12px 14px;
+      font-size: 11px;
+      line-height: 1.65
+    }
+
+    .spec-body ol {
+      margin: 0;
+      padding-left: 18px
+    }
+
+    .spec-body li {
+      margin-bottom: 8px
+    }
+
+    .callout {
+      background: #fff8df;
+      border: 1px solid #f0d981;
+      border-radius: 8px;
+      padding: 9px;
+      margin-top: 10px;
+      color: #735700
+    }
+
+    @media(max-width:1150px) {
+      .workspace {
+        grid-template-columns: 230px minmax(430px, 1fr) 310px
+      }
+
+      .projects {
+        grid-template-columns: repeat(2, 1fr)
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <div class="app">
+    <header class="topbar">
+      <div class="brand">
+        <span class="brandmark">AI</span> LP Wireframe Studio <span
+          style="font-size:11px;color:#8a94a4;font-weight:500">UI Prototype</span>
+      </div>
+      <div class="top-actions">
+        <span class="saved" id="saveState">● 保存済み</span>
+        <button class="btn ghost" onclick="toggleSpec()">仕様メモ</button>
+        <button class="btn" onclick="goView('workspace')">プレビュー共有</button>
+        <button class="btn primary" onclick="goView('workspace')">HTML/CSSを書き出す</button>
+      </div>
+    </header>
+
+    <div class="layout">
+      <nav class="navrail">
+        <button class="navitem active" data-view="dashboard" onclick="goView('dashboard',this)">
+          <span class="ico">▦</span>
+          <span>案件</span>
+        </button>
+        <button class="navitem" data-view="intakeView" onclick="goView('intakeView',this)">
+          <span class="ico">＋</span>
+          <span>新規</span>
+        </button>
+        <button class="navitem" data-view="workspace" onclick="goView('workspace',this)">
+          <span class="ico">◫</span>
+          <span>制作</span>
+        </button>
+        <div class="nav-spacer">
+        </div>
+        <button class="navitem">
+          <span class="ico">⚙</span>
+          <span>設定</span>
+        </button>
+      </nav>
+
+      <main class="content">
+        <!-- DASHBOARD -->
+        <section class="view active" id="dashboard">
+          <div class="dashboard">
+            <div class="pagehead">
+              <div>
+                <h1>ワイヤーフレーム案件</h1>
+                <p>構想、参考資料、AIとの会話、HTML/CSSを案件単位で管理します。</p>
+              </div>
+              <button class="btn primary" onclick="goView('intake')">＋ 新しい案件を作成</button>
+            </div>
+            <div class="metrics">
+              <div class="metric">
+                <span>制作中</span>
+                <strong>4</strong>
+              </div>
+              <div class="metric">
+                <span>初校生成済み</span>
+                <strong>7</strong>
+              </div>
+              <div class="metric">
+                <span>今月の完成案件</span>
+                <strong>12</strong>
+              </div>
+            </div>
+            <div class="projects">
+              <article class="project" onclick="goView('workspace')">
+                <div class="project-preview">
+                  <div class="mini-page">
+                    <div class="mini-line short">
+                    </div>
+                    <div class="mini-block">
+                    </div>
+                    <div class="mini-line">
+                    </div>
+                    <div class="mini-line short">
+                    </div>
+                  </div>
+                  <div class="mini-page">
+                    <div class="mini-block">
+                    </div>
+                    <div class="mini-line">
+                    </div>
+                    <div class="mini-line">
+                    </div>
+                  </div>
+                </div>
+                <div class="project-info">
+                  <h3>アビスパ福岡 コラボLP</h3>
+                  <p>最終更新：今日 17:42　・　Ver. 8</p>
+                  <span class="tag">修正中</span>
+                </div>
+              </article>
+              <article class="project">
+                <div class="project-preview">
+                  <div class="mini-page">
+                    <div class="mini-line">
+                    </div>
+                    <div class="mini-block">
+                    </div>
+                    <div class="mini-block" style="height:25px">
+                    </div>
+                  </div>
+                  <div class="mini-page">
+                    <div class="mini-line short">
+                    </div>
+                    <div class="mini-line">
+                    </div>
+                    <div class="mini-block">
+                    </div>
+                  </div>
+                </div>
+                <div class="project-info">
+                  <h3>短期人材派遣 サービスLP</h3>
+                  <p>最終更新：7月28日　・　Ver. 5</p>
+                  <span class="tag">デザイナー確認中</span>
+                </div>
+              </article>
+              <article class="project">
+                <div class="project-preview">
+                  <div class="mini-page">
+                    <div class="mini-block">
+                    </div>
+                    <div class="mini-line short">
+                    </div>
+                    <div class="mini-line">
+                    </div>
+                  </div>
+                  <div class="mini-page">
+                    <div class="mini-line">
+                    </div>
+                    <div class="mini-block">
+                    </div>
+                    <div class="mini-line short">
+                    </div>
+                  </div>
+                </div>
+                <div class="project-info">
+                  <h3>警備スタッフ 採用LP</h3>
+                  <p>最終更新：7月25日　・　Ver. 3</p>
+                  <span class="tag">初校</span>
+                </div>
+              </article>
+            </div>
+          </div>
+        </section>
+
+        <!-- INTAKE -->
+        <!-- 1. INPUT -->
+        <section class="view" id="intakeView">
+          <div class="flow-head">
+            <div class="flow-title">
+              <h1>新規案件の構想を入力</h1>
+              <p>ラフな構想と資料を先に登録します。</p>
+            </div>
+            <div class="steps">
+              <div class="step active">
+                <i>1</i>案件概要
+              </div>
+              <div class="step-line">
+              </div>
+              <div class="step active">
+                <i>2</i>素材・参考
+              </div>
+              <div class="step-line">
+              </div>
+              <div class="step">
+                <i>3</i>AIヒアリング
+              </div>
+              <div class="step-line">
+              </div>
+              <div class="step">
+                <i>4</i>初校生成
+              </div>
+            </div>
+          </div>
+          <div class="intake">
+            <div class="card form-card">
+              <div class="form-grid">
+                <div class="field">
+                  <label>案件名</label>
+                  <input value="アビスパ福岡×結婚式プレゼントLP">
+                </div>
+                <div class="field">
+                  <label>ページ種別</label>
+                  <select>
+                    <option>キャンペーンLP</option>
+                    <option>サービスLP</option>
+                    <option>採用LP</option>
+                    <option>コーポレートサイト</option>
+                  </select>
+                </div>
+                <div class="field full">
+                  <label>今回つくりたいもの・構想</label>
+                  <textarea>サッカーチームとのコラボ感を強く出した結婚式プレゼント企画。A賞・B賞・C賞があり、最も豪華なA賞を中心に見せたい。応募のハードルが低く感じられ、企画の楽しさが伝わるLPにしたい。</textarea>
+                </div>
+                <div class="field">
+                  <label>主なターゲット</label>
+                  <input value="福岡県内の20〜30代カップル、結婚式を検討中の層">
+                </div>
+                <div class="field">
+                  <label>最重要の訴求</label>
+                  <input value="豪華な結婚式が当たる・チーム公式コラボ">
+                </div>
+                <div class="field full">
+                  <label>必ず入れたい内容</label>
+                  <textarea style="min-height:70px">両社ロゴ、賞の概要、A賞の3大特典、対象カップル、会場紹介、応募フォーム、権利表記</textarea>
+                </div>
+                <div class="field full">
+                  <label>デザインの方向性</label>
+                  <div class="chips">
+                    <button class="chip active">明るい</button>
+                    <button class="chip active">スポーティ</button>
+                    <button class="chip">高級感</button>
+                    <button class="chip">親しみやすい</button>
+                    <button class="chip">シンプル</button>
+                    <button class="chip">写真中心</button>
+                  </div>
+                </div>
+                <div class="field full">
+                  <label>参考URL・過去LP</label>
+                  <textarea style="min-height:70px">参考URL：https://example.com/reference-lp
+                  過去案件：ブライダルキャンペーン2025</textarea>
+                </div>
+                <div class="field full">
+                  <label>画像・資料を追加</label>
+                  <div class="dropzone">スクリーンショット、Excel、PDF、画像、過去LPをドラッグ＆ドロップ<small>素材ごとに「使用可」「参考のみ」を設定</small>
+                  </div>
+                </div>
+                <div class="field full">
+                  <label>上記を</label>
+                  <ul>
+                    <li>
+                      <input type="radio" name="select" value="参考にしながら似たものを作る">
+                      <span>参考にしながら似たものを作る</span>
+                    </li>
+                    <li>
+                      <input type="radio" name="select" value="これと同じものをワイヤーにする">
+                      <span>これと同じものをワイヤーにする</span>
+                    </li>
+                    <li>
+                      <input type="radio" name="select" value="参考にしながらオリジナルをつくる">
+                      <span>参考にしながらオリジナルをつくる</span>
+                    </li>
+                  </ul>
+                  <style type="text/css">
+                    ul {
+                      list-style: none;
+                      margin: 0;
+                      padding: 0;
+                    }
+
+                    input[type=radio] {
+                      width: fit-content;
+                    }
+                  </style>
+                </div>
+                <div class="field full">
+                  <label>使用可能素材</label>
+                  <textarea style="min-height:72px">https://example.com/reference-lp
+                  ※画像を自動取得する前提の入力</textarea>
+                </div>
+                <div class="field full">
+                  <label>素材を追加</label>
+                  <div class="dropzone">Excel、PDF、画像、過去LPのHTMLをドラッグ＆ドロップ<br>
+                    <span style="font-size:11px">※使用可能な素材のみをアップロード</span>
+                  </div>
+                </div>
+              </div>
+              <div class="form-footer">
+                <span style="font-size:12px;color:var(--muted)">入力内容は案件の前提条件として保持されます。</span>
+                <button class="btn primary" onclick="goView('hearingView')">AIヒアリングを開始 →</button>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- 2. AI HEARING -->
+        <section class="view" id="hearingView">
+          <div class="flow-head">
+            <div class="flow-title">
+              <h1>AIヒアリング</h1>
+              <p>入力済み情報を前提に、初校作成に必要な判断だけを整理します。</p>
+            </div>
+            <div class="steps">
+              <div class="step done">
+                <i>✓</i>案件概要
+              </div>
+              <div class="step-line">
+              </div>
+              <div class="step done">
+                <i>✓</i>素材・参考
+              </div>
+              <div class="step-line">
+              </div>
+              <div class="step active">
+                <i>3</i>AIヒアリング
+              </div>
+              <div class="step-line">
+              </div>
+              <div class="step">
+                <i>4</i>初校生成
+              </div>
+            </div>
+          </div>
+
+          <div class="hearing-layout">
+            <aside class="side left">
+              <div class="side-head">
+                <h3>AIが参照している情報</h3>
+                <span class="side-count">前提条件 8件</span>
+              </div>
+              <div class="side-body">
+                <div class="summary-block">
+                  <h4>構想</h4>
+                  <p>公式コラボ感と結婚式プレゼントの豪華さを伝え、応募につなげるキャンペーンLP。</p>
+                  <span class="edit">編集する</span>
+                </div>
+                <div class="summary-block">
+                  <h4>ターゲット</h4>
+                  <p>福岡県内の20〜30代カップル。結婚式を検討中、または費用面で迷っている層。</p>
+                  <span class="edit">編集する</span>
+                </div>
+                <div class="summary-block">
+                  <h4>必須掲載</h4>
+                  <p>両社ロゴ、賞の概要、A賞3大特典、対象者、会場紹介、応募フォーム、権利表記。</p>
+                </div>
+
+                <div style="font-size:10px;font-weight:800;margin:14px 0 8px">アップロード資料</div>
+                <div class="file-row">
+                  <div class="file-thumb">Excel</div>
+                  <div>
+                    <strong>現行ワイヤー.xlsx</strong>
+                    <span>全体構成・コピー・制作指示</span>
+                    <div class="file-tags">
+                      <span class="file-tag">前提資料</span>
+                    </div>
+                  </div>
+                </div>
+                <div class="file-row">
+                  <div class="file-thumb">LP</div>
+                  <div>
+                    <strong>参考LPスクリーンショット</strong>
+                    <span>FVと特典の見せ方</span>
+                    <div class="file-tags">
+                      <span class="file-tag">参考のみ</span>
+                      <span class="file-tag">FV</span>
+                    </div>
+                  </div>
+                </div>
+                <div class="file-row">
+                  <div class="file-thumb">IMG</div>
+                  <div>
+                    <strong>支給素材一式</strong>
+                    <span>選手・会場・ロゴ・キャラクター</span>
+                    <div class="file-tags">
+                      <span class="file-tag">使用可</span>
+                    </div>
+                  </div>
+                </div>
+                <button class="add-file">＋ 資料・画像を追加</button>
+                <div class="info-note">参考URLはメモとして保持し、スクリーンショットは田中さん側でアップロードする想定です。</div>
+              </div>
+            </aside>
+
+            <section class="chat-area">
+              <div class="chat-top">
+                <div class="ai-status">
+                  <span class="ai-dot"></span>ChatGPTがヒアリング中
+                </div>
+                <small>固定質問ではなく、不足情報に応じて質問内容が変わります</small>
+              </div>
+
+              <div class="chat-scroll" id="chatScroll">
+                <div class="msg-wrap">
+                  <div class="avatar">AI</div>
+                  <div class="msg">
+                    <p>入力内容と3件の資料を確認しました。</p>
+                    <p>今回のLPは、<b>「アビスパ福岡との公式コラボによる特別感」</b>と、<b>「結婚式が当たる豪華さ」</b>を両立させ、応募まで誘導するページだと理解しています。</p>
+                    <p>現時点で大枠は十分です。初校の方向性を決めるため、まず以下の3点だけ確認します。</p>
+                  </div>
+                </div>
+
+                <div class="question-card" id="questionCard">
+                  <div class="question-head">
+                    <strong>初校に必要な確認</strong>
+                    <span>1 / 3グループ</span>
+                  </div>
+                  <div class="question-body">
+                    <div class="q-title">1. ファーストビューで最優先する訴求はどれですか？</div>
+                    <div class="q-help">両方入れますが、最初に目へ入る情報の優先順位を決めます。</div>
+                    <div class="option-grid" data-group="priority">
+                      <button class="option" onclick="chooseOption(this)">結婚式プレゼントの豪華さ</button>
+                      <button class="option" onclick="chooseOption(this)">公式コラボの特別感</button>
+                      <button class="option" onclick="chooseOption(this)">両方を同程度</button>
+                    </div>
+
+                    <div class="q-divider">
+                    </div>
+                    <div class="q-title">2. 応募を迷う最大の理由は何だと考えますか？</div>
+                    <div class="q-help">コピーやCTAの作り方に反映します。複数選択できます。</div>
+                    <div class="option-grid multi" data-group="barrier">
+                      <button class="option" onclick="chooseMulti(this)">自分が対象か分かりにくい</button>
+                      <button class="option" onclick="chooseMulti(this)">応募後の営業が不安</button>
+                      <button class="option" onclick="chooseMulti(this)">条件が複雑そう</button>
+                      <button class="option" onclick="chooseMulti(this)">結婚式の費用が不安</button>
+                    </div>
+
+                    <div class="q-divider">
+                    </div>
+                    <div class="q-title">3. 現行Excelの構成で、必ず残したい順番や考え方はありますか？</div>
+                    <textarea class="mini-text"
+                      id="structureAnswer">賞の概要は早めに見せたいです。A賞の詳細は情報量を確保し、会場紹介は長くなりすぎないようにしたいです。</textarea>
+
+                    <div class="question-foot">
+                      <button class="skip" onclick="skipQuestion()">未確定の項目は「AI提案」に任せる</button>
+                      <button class="btn primary small" onclick="submitAnswers()">この回答を送る</button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="chat-composer">
+                <div class="composer-box">
+                  <textarea id="freeInput" placeholder="質問への補足や、先に伝えておきたい内容を入力してください。例：スポーティすぎず、結婚式らしい上品さも残したい。">
+                  </textarea>
+                  <div class="composer-actions">
+                    <span class="attach">＋ 画像・資料を添付</span>
+                    <button class="btn small" onclick="sendFreeText()">メッセージを送る</button>
+                  </div>
+                </div>
+              </div>
+            </section>
+
+            <aside class="side right">
+              <div class="side-head">
+                <h3>ヒアリング整理</h3>
+                <span class="side-count">自動更新</span>
+              </div>
+              <div class="side-body">
+                <div class="progress-card">
+                  <div class="progress-top">
+                    <strong>初校準備</strong>
+                    <b id="progressNumber">48%</b>
+                  </div>
+                  <div class="progress-track">
+                    <div class="progress-bar" id="progressBar">
+                    </div>
+                  </div>
+                  <div class="checklist">
+                    <div class="check done">
+                      <i>✓</i>
+                      <span>目的・CV</span>
+                      <em>確認済み</em>
+                    </div>
+                    <div class="check done">
+                      <i>✓</i>
+                      <span>ターゲット</span>
+                      <em>確認済み</em>
+                    </div>
+                    <div class="check active" id="priorityCheck">
+                      <i>●</i>
+                      <span>訴求の優先順位</span>
+                      <em id="priorityState">確認中</em>
+                    </div>
+                    <div class="check active" id="barrierCheck">
+                      <i>●</i>
+                      <span>応募障壁</span>
+                      <em id="barrierState">確認中</em>
+                    </div>
+                    <div class="check">
+                      <i>−</i>
+                      <span>構成方針</span>
+                      <em id="structureState">未整理</em>
+                    </div>
+                    <div class="check">
+                      <i>−</i>
+                      <span>デザイン強度</span>
+                      <em>次に確認</em>
+                    </div>
+                    <div class="check">
+                      <i>−</i>
+                      <span>フォーム・注意事項</span>
+                      <em>次に確認</em>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="understanding">
+                  <h4>現時点のAI理解</h4>
+                  <dl>
+                    <dt>ページ目的</dt>
+                    <dd>キャンペーンへの応募獲得</dd>
+                    <dt>メイン訴求</dt>
+                    <dd id="mainAppeal">公式コラボ × 結婚式プレゼント</dd>
+                    <dt>構成の仮説</dt>
+                    <dd>FV → 賞の概要 → 企画説明 → A賞詳細 → 対象者 → 会場 → 応募</dd>
+                    <dt>デザイン方向</dt>
+                    <dd>明るくスポーティ。ただしブライダルの上質感も残す。</dd>
+                  </dl>
+                </div>
+
+                <div class="unresolved" id="unresolvedBox">
+                  <strong>まだ判断が必要なこと</strong>
+                  <p>FVの優先訴求、応募障壁、3大特典の表現方法、応募条件・フォーム項目。</p>
+                </div>
+              </div>
+
+              <div class="right-foot">
+                <button class="btn" onclick="openOutline()">現時点の構成案を見る</button>
+                <button class="btn soft" onclick="showNextQuestions()">次の質問へ進む</button>
+                <button class="btn primary" id="generateButton" onclick="goGenerating()"
+                  disabled>ヒアリングを確定して初校生成</button>
+              </div>
+            </aside>
+          </div>
+        </section>
+
+        <!-- 3. GENERATING -->
+        <section class="view" id="generatingView">
+          <div class="flow-head">
+            <div class="flow-title">
+              <h1>初校を生成しています</h1>
+              <p>ヒアリング内容・資料・参考LPをまとめてHTML/CSSへ反映します。</p>
+            </div>
+            <div class="steps">
+              <div class="step done">
+                <i>✓</i>案件概要
+              </div>
+              <div class="step-line">
+              </div>
+              <div class="step done">
+                <i>✓</i>素材・参考
+              </div>
+              <div class="step-line">
+              </div>
+              <div class="step done">
+                <i>✓</i>AIヒアリング
+              </div>
+              <div class="step-line">
+              </div>
+              <div class="step active">
+                <i>4</i>初校生成
+              </div>
+            </div>
+          </div>
+          <div class="generating">
+            <div class="card generate-card">
+              <div class="generate-icon">◇</div>
+              <h2>ワイヤーフレーム初校を作成中</h2>
+              <p>この画面の次に、プレビュー・AI修正・コード編集ができる制作画面へ移ります。</p>
+              <div class="generate-list">
+                <div class="gen-row">
+                  <i>✓</i>案件の目的・ターゲット・訴求を整理
+                </div>
+                <div class="gen-row">
+                  <i>✓</i>Excelと参考スクリーンショットを解析
+                </div>
+                <div class="gen-row running">
+                  <i>●</i>セクション構成とコピー案を生成
+                </div>
+                <div class="gen-row">
+                  <i>−</i>HTML/CSSへレンダリング
+                </div>
+              </div>
+              <div class="loader">
+                <div>
+                </div>
+              </div>
+              <button class="btn primary" style="margin-top:24px" onclick="openWorkspace()">生成完了を確認する（デモ）</button>
+            </div>
+          </div>
+        </section>
+
+        <!-- 4. WORKSPACE -->
+        <section class="view" id="workspaceView">
+          <div class="flow-head">
+            <div class="flow-title">
+              <h1>初校プレビュー・修正</h1>
+              <p>ここで初めて、添付いただいたもう一方の制作画面へ進みます。</p>
+            </div>
+            <div class="steps">
+              <div class="step done">
+                <i>✓</i>案件概要
+              </div>
+              <div class="step-line">
+              </div>
+              <div class="step done">
+                <i>✓</i>素材・参考
+              </div>
+              <div class="step-line">
+              </div>
+              <div class="step done">
+                <i>✓</i>AIヒアリング
+              </div>
+              <div class="step-line">
+              </div>
+              <div class="step done">
+                <i>✓</i>初校生成
+              </div>
+            </div>
+          </div>
+          <div class="workspace">
+            <aside class="w-left">
+              <div class="w-head">
+                <span>構成</span>
+                <span style="font-size:9px;color:var(--muted)">7セクション</span>
+              </div>
+              <div class="section-list">
+                <div class="section-item">ヘッダー</div>
+                <div class="section-item active">ファーストビュー</div>
+                <div class="section-item">賞の概要</div>
+                <div class="section-item">企画説明</div>
+                <div class="section-item">A賞の詳細</div>
+                <div class="section-item">おすすめ対象</div>
+                <div class="section-item">会場紹介</div>
+                <div class="section-item">応募フォーム</div>
+              </div>
+            </aside>
+            <section class="canvas">
+              <div class="page">
+                <div class="wire-head">
+                  <div class="logo">LOGO × LOGO</div>
+                  <div class="navlinks">
+                    <span>企画概要</span>
+                    <span>賞品</span>
+                    <span>会場紹介</span>
+                    <span>応募する</span>
+                  </div>
+                </div>
+                <div class="hero">
+                  <div>
+                    <div class="eyebrow">OFFICIAL COLLABORATION</div>
+                    <h2>夢の結婚式を<br>プレゼント</h2>
+                    <div class="line">
+                    </div>
+                    <div class="line">
+                    </div>
+                    <div class="line s">
+                    </div>
+                    <button class="btn" style="margin-top:12px">キャンペーンに応募する</button>
+                  </div>
+                  <div class="image-box">選手・カップル・キャラクター集合写真</div>
+                </div>
+                <div class="awards">
+                  <div class="eyebrow" style="text-align:center">SPECIAL PRESENT</div>
+                  <h3>豪華3つのプレゼント</h3>
+                  <div class="award-grid">
+                    <div class="award">
+                      <div class="ph">
+                      </div>
+                      <b>A賞：結婚式</b>
+                    </div>
+                    <div class="award">
+                      <div class="ph">
+                      </div>
+                      <b>B賞：特別体験</b>
+                    </div>
+                    <div class="award">
+                      <div class="ph">
+                      </div>
+                      <b>C賞：記念品</b>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </section>
+            <aside class="w-right">
+              <div class="w-head">
+                <span>AIと構成を調整</span>
+                <span style="font-size:9px;color:var(--green)">初校 Ver.1</span>
+              </div>
+              <div class="w-chat">
+                <div class="w-msg">ヒアリング内容をもとに初校を作成しました。FVでは「結婚式プレゼント」を主見出しにし、公式コラボ表記を直上に置いています。</div>
+                <div class="w-msg user">A賞をもっと豪華に見せたいです。</div>
+                <div class="w-msg">A賞の面積を拡大し、B賞・C賞との差をつける修正案を作成します。</div>
+              </div>
+            </aside>
+          </div>
+        </section>
+
+        <!-- WORKSPACE -->
+        <section class="view" id="workspace">
+          <div class="workspace" id="workspaceGrid">
+            <aside class="sidebar">
+              <div class="sidehead">
+                <h2>構成</h2>
+                <span>7セクション</span>
+              </div>
+              <div class="tabs">
+                <button class="tab active">構成</button>
+                <button class="tab">素材</button>
+                <button class="tab">参考</button>
+              </div>
+              <div class="sectionlist">
+                <div class="section">
+                  <strong>ヘッダー</strong>
+                  <span>ロゴ・応募CTA</span>
+                </div>
+                <div class="section active">
+                  <span class="mode">セクション生成</span>
+                  <strong>ファーストビュー</strong>
+                  <span>コラボ告知・メイン訴求</span>
+                </div>
+                <div class="section">
+                  <strong>賞の概要</strong>
+                  <span>A賞・B賞・C賞</span>
+                </div>
+                <div class="section">
+                  <strong>企画説明</strong>
+                  <span>コラボ背景・魅力</span>
+                </div>
+                <div class="section">
+                  <strong>A賞の詳細</strong>
+                  <span>3大特典</span>
+                </div>
+                <div class="section">
+                  <strong>おすすめ対象</strong>
+                  <span>対象カップル</span>
+                </div>
+                <div class="section">
+                  <strong>会場紹介</strong>
+                  <span>写真・施設特徴</span>
+                </div>
+                <div class="section">
+                  <strong>応募フォーム</strong>
+                  <span>応募項目・同意</span>
+                </div>
+                <button class="sec-add">＋ セクションを追加</button>
+              </div>
+            </aside>
+
+            <section class="canvasarea">
+              <div class="canvasbar">
+                <div class="canvas-controls">
+                  <button class="btn small">PC</button>
+                  <button class="btn small">SP</button>
+                  <span class="divider">
+                  </span>
+                  <button class="btn small">−</button>
+                  <span style="font-size:11px">80%</span>
+                  <button class="btn small">＋</button>
+                </div>
+                <div class="canvas-controls">
+                  <span class="status-pill">AI初校 Ver.8</span>
+                  <button class="btn small" onclick="toggleCode()">&lt;/&gt; コード編集</button>
+                </div>
+              </div>
+              <div class="canvas-scroll">
+                <div class="page-frame">
+                  <div class="header-wire">
+                    <div class="logo-wire">LOGO × LOGO</div>
+                    <div class="nav-wire">
+                      <span>企画概要</span>
+                      <span>賞品</span>
+                      <span>会場紹介</span>
+                    </div>
+                    <div class="cta-wire">応募する</div>
+                  </div>
+                  <section class="wf-section hero-wire selected" onclick="selectSection(this)">
+                    <span class="label">01 ファーストビュー</span>
+                    <span class="note-badge">1</span>
+                    <div>
+                      <div class="eyebrow">TEAM × WEDDING COLLABORATION</div>
+                      <h1>夢の結婚式を<br>プレゼント</h1>
+                      <div class="copy-lines">
+                        <div>
+                        </div>
+                        <div>
+                        </div>
+                        <div>
+                        </div>
+                      </div>
+                      <div class="wire-button">キャンペーンに応募する</div>
+                    </div>
+                    <div class="image-box">選手・カップル・キャラクター集合写真</div>
+                  </section>
+                  <section class="wf-section" onclick="selectSection(this)">
+                    <span class="label">02 賞の概要</span>
+                    <div class="center-title">
+                      <div class="eyebrow">SPECIAL PRESENT</div>
+                      <h2>豪華3つのプレゼント</h2>
+                      <p>企画の全体像を最初に理解させるセクション</p>
+                    </div>
+                    <div class="cards3">
+                      <div class="wf-card">
+                        <div class="thumb">A賞メイン写真</div>
+                        <h4>A賞：結婚式プレゼント</h4>
+                        <p>最も豪華な賞であることが一目で伝わるコピー。</p>
+                      </div>
+                      <div class="wf-card">
+                        <div class="thumb">B賞写真</div>
+                        <h4>B賞：特別体験</h4>
+                        <p>体験価値が想像できる説明を掲載。</p>
+                      </div>
+                      <div class="wf-card">
+                        <div class="thumb">C賞写真</div>
+                        <h4>C賞：記念品</h4>
+                        <p>応募者全体の期待感を高める補助賞。</p>
+                      </div>
+                    </div>
+                  </section>
+                  <section class="wf-section" onclick="selectSection(this)">
+                    <span class="label">03 企画説明</span>
+                    <span class="note-badge">2</span>
+                    <div class="twocol">
+                      <div class="image-box" style="height:200px">コラボ企画イメージ</div>
+                      <div class="text-skeleton">
+                        <div class="eyebrow">ABOUT CAMPAIGN</div>
+                        <h3>ふたりの新しい門出を、特別な一日に。</h3>
+                        <div class="small-lines">
+                          <div>
+                          </div>
+                          <div>
+                          </div>
+                          <div>
+                          </div>
+                          <div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </section>
+                  <section class="wf-section" onclick="selectSection(this)" style="background:#f7f8fa">
+                    <span class="label">04 A賞の詳細</span>
+                    <div class="center-title">
+                      <div class="eyebrow">SPECIAL PRIZE</div>
+                      <h2>A賞には3つの特典</h2>
+                      <p>情報が多いため、縦に詳しく見せる案</p>
+                    </div>
+                    <div class="twocol" style="margin-bottom:22px">
+                      <div class="image-box" style="height:150px">チャペル挙式</div>
+                      <div class="text-skeleton">
+                        <h3>01 挙式をプレゼント</h3>
+                        <div class="small-lines">
+                          <div>
+                          </div>
+                          <div>
+                          </div>
+                          <div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="twocol" style="margin-bottom:22px">
+                      <div class="text-skeleton">
+                        <h3>02 衣装・写真</h3>
+                        <div class="small-lines">
+                          <div>
+                          </div>
+                          <div>
+                          </div>
+                          <div>
+                          </div>
+                        </div>
+                      </div>
+                      <div class="image-box" style="height:150px">ドレス・撮影</div>
+                    </div>
+                    <div class="twocol">
+                      <div class="image-box" style="height:150px">チーム特別演出</div>
+                      <div class="text-skeleton">
+                        <h3>03 コラボ限定特典</h3>
+                        <div class="small-lines">
+                          <div>
+                          </div>
+                          <div>
+                          </div>
+                          <div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </section>
+                  <section class="wf-section" onclick="selectSection(this)">
+                    <span class="label">05 おすすめ対象</span>
+                    <div class="center-title">
+                      <h2>こんなおふたりにおすすめ</h2>
+                    </div>
+                    <div class="cards3">
+                      <div class="wf-card">
+                        <h4>結婚式を迷っている</h4>
+                        <p>費用や準備への不安がある方。</p>
+                      </div>
+                      <div class="wf-card">
+                        <h4>チームが好き</h4>
+                        <p>思い出に残る特別な演出をしたい方。</p>
+                      </div>
+                      <div class="wf-card">
+                        <h4>福岡で挙げたい</h4>
+                        <p>地元で家族や友人と祝いたい方。</p>
+                      </div>
+                    </div>
+                  </section>
+                  <section class="wf-section" onclick="selectSection(this)" style="background:#f7f8fa">
+                    <span class="label">06 会場紹介</span>
+                    <div class="twocol">
+                      <div class="text-skeleton">
+                        <div class="eyebrow">WEDDING VENUE</div>
+                        <h3>会場名・特徴を紹介</h3>
+                        <div class="small-lines">
+                          <div>
+                          </div>
+                          <div>
+                          </div>
+                          <div>
+                          </div>
+                          <div>
+                          </div>
+                        </div>
+                        <div class="wire-button">会場を詳しく見る</div>
+                      </div>
+                      <div class="image-box" style="height:220px">会場写真</div>
+                    </div>
+                  </section>
+                  <section class="wf-section" onclick="selectSection(this)">
+                    <span class="label">07 応募フォーム</span>
+                    <div class="center-title">
+                      <h2>キャンペーン応募フォーム</h2>
+                      <p>入力項目、規約同意、送信ボタンを配置</p>
+                    </div>
+                    <div style="width:70%;margin:0 auto">
+                      <div class="small-lines">
+                        <div>
+                        </div>
+                        <div>
+                        </div>
+                        <div>
+                        </div>
+                        <div>
+                        </div>
+                        <div>
+                        </div>
+                      </div>
+                      <div class="wire-button" style="display:block;text-align:center;margin-top:20px">応募内容を確認する</div>
+                    </div>
+                  </section>
+                </div>
+              </div>
+            </section>
+
+            <!-- <aside class="rightpanel">
+              <div class="panelhead">
+                <h3>AIと構成を調整</h3>
+                <div class="version">前提条件 8件</div>
+              </div>
+              <div class="chat-scroll">
+                <div class="msg ai">
+                  <div class="who">ChatGPT</div>初校を作成しました。現行Excelの情報を維持しつつ、A賞の魅力が早く伝わる順序にしています。<ul class="change-list">
+                    <li>賞の概要をFV直下へ移動</li>
+                    <li>A賞3特典を縦型で詳しく表示</li>
+                    <li>会場紹介を1セクションに圧縮</li>
+                  </ul>
+                </div>
+                <div class="msg user">
+                  <div class="who">あなた</div>
+                ファーストビューでもっとチームとのコラボ感を出したいです。A賞の豪華さも一目でわかるようにしてください。</div>
+                <div class="msg ai">
+                  <div class="who">ChatGPT</div>
+                  FVの写真指定を「選手・カップル・キャラクター集合」に変更し、見出し上部に公式コラボ表記を追加しました。賞品総額や「1組限定」など、確定情報があればさらに強くできます。
+                </div>
+                <div class="msg user">
+                  <div class="who">あなた</div>
+                  3大特典はカードで横並びではなく、写真と説明を交互に見せたいです。
+                </div>
+                <div class="msg ai">
+                  <div class="who">ChatGPT</div>
+                  A賞詳細を左右交互の3ブロックへ変更しました。他のセクションは維持しています。
+                </div>
+              </div>
+              <div class="quick-actions">
+                <button class="quick">コピーを強くする</button>
+                <button class="quick">構成を短くする</button>
+                <button class="quick">参考LPに寄せる</button>
+                <button class="quick">画像案を出す</button>
+              </div>
+              <div class="composer">
+                <textarea placeholder="例：A賞をもっと目立たせて。ほかの箇所は変更しないでください。">
+                </textarea>
+                <div class="composer-foot">
+                  <span class="attach">＋ 画像・資料を添付</span>
+                  <button class="btn primary small" onclick="fakeSend()">修正を反映</button>
+                </div>
+              </div>
+            </aside> -->
+            <aside class="right">
+              <div class="righthead">
+                <h3>FVセクションをビジュアル化</h3>
+                <span class="ver">初校 Ver.1</span>
+              </div>
+              <div class="paneltabs">
+                <button class="ptab">構成調整</button>
+                <button class="ptab active">FV全体イメージ</button>
+                <button class="ptab">素材</button>
+              </div>
+
+              <div class="panelbody">
+                <div class="block">
+                  <h4>対象セクション</h4>
+                  <div class="target">
+                    <div>
+                      <strong>ファーストビュー全体</strong>
+                      <span>コピー・背景・人物・装飾・CTAを含む</span>
+                    </div>
+                    <button>変更</button>
+                  </div>
+                </div>
+
+                <div class="block">
+                  <h4>生成方式</h4>
+                  <div class="modechips">
+                    <button class="active">セクション全体を1枚で生成</button>
+                    <button>背景だけ生成＋HTML文字</button>
+                  </div>
+                  <p style="margin-top:8px">今回はFV全体の完成イメージを、デザインカンプに近い1枚画像として作成します。</p>
+                </div>
+
+                <div class="block">
+                  <h4>現在の構成・コピーを引き継ぐ</h4>
+                  <div class="copybox">
+                    <div class="copyrow">
+                      <b>肩書き</b>
+                      <span>OFFICIAL COLLABORATION</span>
+                    </div>
+                    <div class="copyrow">
+                      <b>見出し</b>
+                      <span>夢の結婚式をプレゼント</span>
+                    </div>
+                    <div class="copyrow">
+                      <b>補足</b>
+                      <span>公式コラボ・豪華特典・応募のしやすさを伝える</span>
+                    </div>
+                    <div class="copyrow">
+                      <b>CTA</b>
+                      <span>キャンペーンに応募する</span>
+                    </div>
+                  </div>
+                  <label class="checkrow" style="margin-top:9px">
+                    <input type="checkbox" checked>現在のコピー内容を維持する
+                  </label>
+                  <label class="checkrow">
+                    <input type="checkbox">コピーも含めてNano Bananaに提案させる
+                  </label>
+                </div>
+
+                <div class="block">
+                  <h4>FV全体への生成指示</h4>
+                  <textarea
+                    class="textarea">アビスパ福岡との公式コラボ感が伝わる、明るく爽やかなファーストビュー全体のデザイン。左側にメインコピーと応募CTA、右側に選手・カップル・マスコットを配置。スポーティな高揚感と、結婚式らしい上質感を両立する。チームカラーをアクセントとして使用し、豪華な結婚式プレゼント企画であることが一目で伝わる構成。</textarea>
+
+                  <div class="row2" style="margin-top:8px">
+                    <div>
+                      <!-- <label class="label">デザイン比率</label> -->
+                      <select class="select">
+                        <option>スポーツ5：ブライダル5</option>
+                        <option>スポーツ7：ブライダル3</option>
+                        <option>スポーツ3：ブライダル7</option>
+                      </select>
+                    </div>
+                    <div>
+                      <!-- <label class="label">FVの高さ</label> -->
+                      <select class="select">
+                        <option>標準 650〜750px相当</option>
+                        <option>コンパクト</option>
+                        <option>大きく印象的</option>
+                      </select>
+                    </div>
+                  </div>
+                  <div class="row2" style="margin-top:8px">
+                    <div>
+                      <!-- <label class="label">コピー配置</label> -->
+                      <select class="select">
+                        <option>左コピー・右ビジュアル</option>
+                        <option>中央コピー</option>
+                        <option>全面背景＋コピー重ね</option>
+                      </select>
+                    </div>
+                    <div>
+                      <!-- <label class="label">生成数</label> -->
+                      <select class="select">
+                        <option>4案</option>
+                        <option>2案</option>
+                        <option>1案</option>
+                      </select>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="block">
+                  <h4>参考素材</h4>
+                  <div class="ref-list">
+                    <div class="ref">
+                      <div class="refthumb">LP</div>
+                      <div>
+                        <strong>参考LPスクリーンショット</strong>
+                        <span>FV全体の構図・情報の強弱を参考</span>
+                      </div>
+                      <button>参照中</button>
+                    </div>
+                    <div class="ref">
+                      <div class="refthumb">IMG</div>
+                      <div>
+                        <strong>選手・マスコット素材</strong>
+                        <span>人物の配置・コラボ感の参考</span>
+                      </div>
+                      <button>使用可</button>
+                    </div>
+                    <div class="ref">
+                      <div class="refthumb">IMG</div>
+                      <div>
+                        <strong>会場・カップル写真</strong>
+                        <span>ブライダルの上質感を補強</span>
+                      </div>
+                      <button>使用可</button>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="block">
+                  <h4>必ず守る条件</h4>
+                  <div class="checks">
+                    <label class="checkrow">
+                      <input type="checkbox" checked>見出し・CTA・人物を含むFV全体として成立させる
+                    </label>
+                    <label class="checkrow">
+                      <input type="checkbox" checked>元のワイヤーの情報優先順位を維持する
+                    </label>
+                    <label class="checkrow">
+                      <input type="checkbox" checked>ロゴの位置を確保する
+                    </label>
+                    <label class="checkrow">
+                      <input type="checkbox" checked>PC表示の横長セクションとして生成する
+                    </label>
+                    <label class="checkrow">
+                      <input type="checkbox" checked>過剰に作り込みすぎず、デザイナーへの方向性共有用にする
+                    </label>
+                  </div>
+                </div>
+
+                <div class="block">
+                  <div class="result-head">
+                    <strong>FV全体の生成候補</strong>
+                    <button class="btn primary">4案生成</button>
+                  </div>
+                  <div class="result-grid">
+                    <div class="thumb">
+                      <div class="img">
+                        <div class="copymini">OFFICIAL COLLABORATION</div>
+                        <div class="titlemini">夢の結婚式を<br>プレゼント</div>
+                        <div class="shape s2">
+                        </div>
+                        <div class="shape">
+                        </div>
+                      </div>
+                      <div class="meta">
+                        <strong>案1：バランス型</strong>
+                        <span>元ワイヤーを維持しながら、コラボ感と上質感を両立。</span>
+                        <div class="actions">
+                          <button>拡大</button>
+                          <button>修正</button>
+                          <button class="primary" onclick="applyFV('案1')">FV全体に反映</button>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="thumb">
+                      <div class="img"
+                        style="background:linear-gradient(90deg,rgba(255,255,255,.92),rgba(255,255,255,.25)),linear-gradient(135deg,#fff0e8,#b8cae7)">
+                        <div class="copymini">TEAM × WEDDING</div>
+                        <div class="titlemini">特別な一日を<br>ふたりへ</div>
+                        <div class="shape s2">
+                        </div>
+                        <div class="shape">
+                        </div>
+                      </div>
+                      <div class="meta">
+                        <strong>案2：コラボ感強め</strong>
+                        <span>チームとの公式企画であることを前面に出す。</span>
+                        <div class="actions">
+                          <button>拡大</button>
+                          <button>修正</button>
+                          <button class="primary" onclick="applyFV('案2')">FV全体に反映</button>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="thumb">
+                      <div class="img"
+                        style="background:linear-gradient(90deg,rgba(255,255,255,.93),rgba(255,255,255,.35)),linear-gradient(135deg,#fff6f2,#e7d9f0)">
+                        <div class="copymini">SPECIAL WEDDING GIFT</div>
+                        <div class="titlemini">夢の結婚式を<br>プレゼント</div>
+                        <div class="shape s2">
+                        </div>
+                        <div class="shape">
+                        </div>
+                      </div>
+                      <div class="meta">
+                        <strong>案3：ブライダル寄り</strong>
+                        <span>結婚式の上質感と憧れを強く表現。</span>
+                        <div class="actions">
+                          <button>拡大</button>
+                          <button>修正</button>
+                          <button class="primary" onclick="applyFV('案3')">FV全体に反映</button>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="thumb">
+                      <div class="img"
+                        style="background:linear-gradient(90deg,rgba(255,255,255,.91),rgba(255,255,255,.22)),linear-gradient(135deg,#eafff6,#a7c6e9)">
+                        <div class="copymini">ENTRY CAMPAIGN</div>
+                        <div class="titlemini">応募から始まる<br>特別な結婚式</div>
+                        <div class="shape s2">
+                        </div>
+                        <div class="shape">
+                        </div>
+                      </div>
+                      <div class="meta">
+                        <strong>案4：応募訴求型</strong>
+                        <span>参加しやすさと楽しさを前面に出す。</span>
+                        <div class="actions">
+                          <button>拡大</button>
+                          <button>修正</button>
+                          <button class="primary" onclick="applyFV('案4')">FV全体に反映</button>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="notice">
+                  <strong>実装上のポイント</strong>
+                  <br>
+                  ここでは「画像枠」ではなく、FVセクション全体を1つの生成単位として扱います。生成結果はデザイン方向を確認するためのカンプとしてワイヤー上に重ね、必要なら元のHTMLワイヤーへ戻せます。
+                </div>
+              </div>
+
+              <div class="footer-actions">
+                <button class="btn" onclick="showWire()">ワイヤーに戻す</button>
+                <button class="btn primary" onclick="showGenerated()">選択案をFV全体に反映</button>
+              </div>
+            </aside>
+
+            <section class="codepanel">
+              <div class="codebox">
+                <div class="codehead">
+                  <span>index.html</span>
+                  <span>自動保存</span>
+                </div>
+                <pre contenteditable="true">&lt;section class=&quot;hero&quot;&gt;
+                  &lt;div class=&quot;hero__content&quot;&gt;
+                  &lt;p class=&quot;hero__eyebrow&quot;&gt;TEAM × WEDDING&lt;/p&gt;
+                  &lt;h1&gt;夢の結婚式をプレゼント&lt;/h1&gt;
+                  &lt;p&gt;キャンペーン説明文が入ります。&lt;/p&gt;
+                  &lt;a class=&quot;button&quot; href=&quot;#entry&quot;&gt;応募する&lt;/a&gt;
+                  &lt;/div&gt;
+                  &lt;figure class=&quot;hero__image&quot;&gt;...&lt;/figure&gt;
+                &lt;/section&gt;</pre>
+              </div>
+              <div class="codebox">
+                <div class="codehead">
+                  <span>style.css</span>
+                  <span>即時プレビュー</span>
+                </div>
+                <pre contenteditable="true">
+                  .hero  {
+                    display: grid;
+                    grid-template-columns: 1.1fr .9fr;
+                    gap: 32px;
+                    padding: 72px 48px;
+                    background: #f7f8fa;
+                  }
+                  .hero h1  {
+                    font-size: 48px;
+                    line-height: 1.35;
+                  }
+                </pre>
+              </div>
+            </section>
+          </div>
+        </section>
+
+      </main>
+    </div>
+  </div>
+
+  <div class="ref-modal" id="refModal" onclick="closeRef(event)">
+    <div class="ref-dialog" onclick="event.stopPropagation()">
+      <div class="ref-viewer">
+        <img id="refModalImage" src="assets/ref_sports_collab.png" alt="参考LPスクリーンショット">
+      </div>
+      <aside class="ref-detail">
+        <div class="ref-detail-head">
+          <strong id="refModalTitle">参考LP</strong>
+          <button class="btn small" onclick="closeRef()">閉じる</button>
+        </div>
+        <div class="ref-detail-body">
+          <h4>参照目的</h4>
+          <p id="refModalPurpose">参考にするポイントを表示します。</p>
+          <h4>取得元</h4>
+          <p id="refModalOrigin">URLから自動取得</p>
+          <h4>AIへ伝える参照ポイント</h4>
+          <div class="ref-point">
+            <b>構成を参考</b>ページ全体をコピーせず、セクションの順番と情報量を参照します。
+          </div>
+          <div class="ref-point">
+            <b>特定箇所を参考</b>「FV」「賞の見せ方」など、採用する箇所だけを指定できます。
+          </div>
+          <div class="ref-point">
+            <b>参考のみ</b>画像や固有コピーは転用せず、デザイン意図だけをAIへ渡します。
+          </div>
+        </div>
+        <div class="ref-use">
+          <button class="btn primary" onclick="useReference()">このLPをAIの参考に追加</button>
+          <button class="btn">範囲を選択して参考にする</button>
+        </div>
+      </aside>
+    </div>
+  </div>
+
+  <div class="spec-drawer" id="specDrawer">
+    <div class="spec-head">
+      <span>プログラマ打ち合わせ用メモ</span>
+      <button class="btn small" onclick="toggleSpec()">閉じる</button>
+    </div>
+    <div class="spec-body">
+      <ol>
+        <li>
+          <b>案件単位の永続化</b>
+          <br>構想、素材、参考URL、チャット履歴、現在のHTML/CSS、バージョンを一体で保持。
+        </li>
+        <li>
+          <b>差分修正を基本にする</b>
+          <br>AIは毎回全生成せず、対象セクションと変更内容を特定して反映。
+        </li>
+        <li>
+          <b>プレビューとチャットを同時表示</b>
+          <br>見ながら指示できることが、このUIの中心価値。
+        </li>
+        <li>
+          <b>直接編集は二段階</b>
+          <br>本文のインライン編集と、HTML/CSSコード編集を用意。
+        </li>
+        <li>
+          <b>素材の権利区分</b>
+          <br>「正式利用可」「仮置き」「参考のみ」を素材ごとに管理。
+        </li>
+        <li>
+          <b>バージョン管理</b>
+          <br>AI反映前後の差分確認、取り消し、過去版復元が必要。
+        </li>
+      </ol>
+      <div class="callout">MVPではドラッグ＆ドロップ式の自由レイアウト編集より、チャット修正・テキスト編集・コード編集を優先。</div>
+    </div>
+  </div>
+
+  <script>
+    function goView(id, el) {
+      document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
+      document.getElementById(id).classList.add('active');
+      document.querySelectorAll('.navitem[data-view]').forEach(n => n.classList.toggle('active', n.dataset.view === id));
+    }
+    function toggleCode() {
+      document.getElementById('workspaceGrid').classList.toggle('code-open')
+    }
+    function toggleSpec() {
+      document.getElementById('specDrawer').classList.toggle('open')
+    }
+    function openRef(src, title, purpose, origin) {
+
+      document.getElementById('refModalImage').src = src;
+      document.getElementById('refModalTitle').textContent = title;
+      document.getElementById('refModalPurpose').textContent = purpose;
+      document.getElementById('refModalOrigin').textContent = origin;
+      document.getElementById('refModal').classList.add('open');
+    }
+    function closeRef(event) {
+      if (event && event.target !== document.getElementById('refModal')) return; document.getElementById('refModal').classList.remove('open')
+    }
+    function useReference() {
+      document.getElementById('saveState').textContent = '● 参考LPをAIに追加しました'; setTimeout(() => document.getElementById('saveState').textContent = '● 保存済み', 1800); closeRef()
+    }
+    function selectSection(el) {
+      document.querySelectorAll('.wf-section').forEach(s => s.classList.remove('selected')); el.classList.add('selected')
+    }
+    function leftTab(type, el) {
+
+      el.parentElement.querySelectorAll('.tab').forEach(t => t.classList.remove('active')); el.classList.add('active');
+      document.getElementById('outlinePanel').style.display = type === 'outline' ? 'block' : 'none';
+      document.getElementById('assetPanel').style.display = type === 'assets' ? 'block' : 'none';
+      document.getElementById('refPanel').style.display = type === 'refs' ? 'block' : 'none';
+    }
+    function fakeSend() {
+
+      document.getElementById('saveState').textContent = '● AI修正を反映しました';
+      setTimeout(() => document.getElementById('saveState').textContent = '● 保存済み', 1800)
+    }
+  </script>
+  <script>
+    let hearingCompleted = false;
+
+    function showView(id) {
+      document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
+      document.getElementById(id).classList.add('active');
+    }
+
+    function startHearing() {
+      showView('hearingView');
+      document.getElementById('saveState').textContent = '● ヒアリングを開始しました';
+      setTimeout(() => document.getElementById('saveState').textContent = '● 保存済み', 1400);
+    }
+
+    function chooseOption(el) {
+      el.parentElement.querySelectorAll('.option').forEach(x => x.classList.remove('selected'));
+      el.classList.add('selected');
+    }
+
+    function chooseMulti(el) { el.classList.toggle('selected'); }
+
+    function selectedText(group) {
+      return [...document.querySelectorAll(`[data-group="${group}"] .option.selected`)].map(x => x.textContent).join('、');
+    }
+
+    function submitAnswers() {
+      const priority = selectedText('priority');
+      const barrier = selectedText('barrier');
+      const structure = document.getElementById('structureAnswer').value.trim();
+
+      if (!priority) {
+        alert('ファーストビューの優先訴求を選択してください。');
+        return;
+      }
+      if (!barrier) {
+        alert('応募を迷う理由を1つ以上選択してください。');
+        return;
+      }
+
+      const scroll = document.getElementById('chatScroll');
+      const user = document.createElement('div');
+      user.className = 'msg-wrap msg-user';
+      user.innerHTML = `<div class="msg"><p><b>FVの優先：</b>${priority}</p><p><b>応募障壁：</b>${barrier}</p><p><b>構成：</b>${structure || 'AI提案に任せる'}</p></div>`;
+      scroll.appendChild(user);
+
+      const ai = document.createElement('div');
+      ai.className = 'msg-wrap';
+      ai.innerHTML = `<div class="avatar">AI</div><div class="msg"><p>ありがとうございます。初校方針へ反映しました。</p><ul><li>FVは「${priority}」を主軸に設計</li><li>「${barrier}」への不安解消をCTA周辺に配置</li><li>賞の概要を早めに提示し、A賞の情報量を確保</li></ul><p>残りはデザインの強度と、フォーム・応募条件を確認すれば初校を生成できます。</p></div>`;
+      scroll.appendChild(ai);
+
+      document.getElementById('questionCard').style.display = 'none';
+      document.getElementById('priorityCheck').className = 'check done';
+      document.getElementById('priorityCheck').querySelector('i').textContent = '✓';
+      document.getElementById('priorityState').textContent = '確認済み';
+      document.getElementById('barrierCheck').className = 'check done';
+      document.getElementById('barrierCheck').querySelector('i').textContent = '✓';
+      document.getElementById('barrierState').textContent = '確認済み';
+      document.getElementById('structureState').textContent = '整理済み';
+      document.getElementById('mainAppeal').textContent = priority;
+      setProgress(76);
+      scroll.scrollTop = scroll.scrollHeight;
+      document.getElementById('saveState').textContent = '● 回答を保存しました';
+      setTimeout(() => document.getElementById('saveState').textContent = '● 保存済み', 1500);
+    }
+
+    function showNextQuestions() {
+      const scroll = document.getElementById('chatScroll');
+      if (document.getElementById('questionCard').style.display !== 'none') {
+        alert('まず表示中の質問へ回答してください。');
+        return;
+      }
+      if (document.getElementById('nextQuestion')) return;
+
+      const next = document.createElement('div');
+      next.className = 'question-card';
+      next.id = 'nextQuestion';
+      next.innerHTML = `
+      <div class="question-head"><strong>最終確認</strong><span>2 / 3グループ</span></div>
+      <div class="question-body">
+      <div class="q-title">4. デザインのバランスを選んでください</div>
+      <div class="q-help">スポーツ感とブライダル感の比率です。</div>
+      <div class="option-grid" data-group="tone">
+      <button class="option" onclick="chooseOption(this)">スポーツ 7：ブライダル 3</button>
+      <button class="option selected" onclick="chooseOption(this)">スポーツ 5：ブライダル 5</button>
+      <button class="option" onclick="chooseOption(this)">スポーツ 3：ブライダル 7</button>
+      </div>
+      <div class="q-divider"></div>
+      <div class="q-title">5. 応募条件・フォームについて</div>
+      <textarea class="mini-text" id="formAnswer">フォーム項目は現行資料を維持。応募条件はフォーム直前でも再掲し、権利表記はページ下部に掲載。</textarea>
+      <div class="question-foot">
+      <button class="skip" onclick="completeHearing()">未確定部分は仮文言で生成</button>
+      <button class="btn primary small" onclick="completeHearing()">最終回答を送る</button>
+      </div>
+      </div>`;
+      scroll.appendChild(next);
+      scroll.scrollTop = scroll.scrollHeight;
+    }
+
+    function completeHearing() {
+      const next = document.getElementById('nextQuestion');
+      if (next) next.style.display = 'none';
+      const scroll = document.getElementById('chatScroll');
+      const ai = document.createElement('div');
+      ai.className = 'msg-wrap';
+      ai.innerHTML = `<div class="avatar">AI</div><div class="msg"><p><b>初校生成に必要な情報がそろいました。</b></p><p>未確定の数値・応募条件・権利表記は、資料内の内容を優先し、不明部分は「要確認」と表示して生成します。</p><p>右下の「ヒアリングを確定して初校生成」から進めます。</p></div>`;
+      scroll.appendChild(ai);
+      scroll.scrollTop = scroll.scrollHeight;
+      setProgress(100);
+      hearingCompleted = true;
+      document.getElementById('generateButton').disabled = false;
+      document.getElementById('unresolvedBox').innerHTML = '<strong>初校生成可能</strong><p>不明な固有情報は「要確認」表示にして初校へ進めます。</p>';
+    }
+
+    function skipQuestion() {
+      document.querySelector('[data-group="priority"] .option:nth-child(3)').classList.add('selected');
+      document.querySelectorAll('[data-group="barrier"] .option')[0].classList.add('selected');
+      submitAnswers();
+    }
+
+    function setProgress(value) {
+      document.getElementById('progressNumber').textContent = value + '%';
+      document.getElementById('progressBar').style.width = value + '%';
+    }
+
+    function sendFreeText() {
+      const input = document.getElementById('freeInput');
+      const text = input.value.trim();
+      if (!text) return;
+      const scroll = document.getElementById('chatScroll');
+      const user = document.createElement('div');
+      user.className = 'msg-wrap msg-user';
+      user.innerHTML = `<div class="msg">${text.replace(/[&<>]/g, m => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;' }[m]))}</div>`;
+      scroll.appendChild(user);
+      const ai = document.createElement('div');
+      ai.className = 'msg-wrap';
+      ai.innerHTML = '<div class="avatar">AI</div><div class="msg">補足内容を案件の前提条件へ追加しました。現在の質問と初校方針へ反映します。</div>';
+      scroll.appendChild(ai);
+      input.value = '';
+      scroll.scrollTop = scroll.scrollHeight;
+    }
+
+    function openOutline() { document.getElementById('outlineModal').classList.add('open') }
+    function closeOutline(e) {
+      if (e && e.target !== document.getElementById('outlineModal')) return;
+      document.getElementById('outlineModal').classList.remove('open');
+    }
+    function goGenerating() {
+      if (!hearingCompleted) return;
+      showView('generatingView');
+    }
+    function openWorkspace() { showView('workspaceView') }
+  </script>
+</body>
+
+</html>

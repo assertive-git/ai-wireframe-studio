@@ -1,0 +1,67 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model Project {
+  id               String    @id @default(cuid())
+  name             String
+  pageType         String
+  concept          String   
+  target           String   
+  primaryAppeal    String   
+  mustInclude      String   
+  designDirections Json
+  referenceUrls    Json
+  referenceMode    String
+  hearingSummary   Json?
+  currentHtml      String?  
+  currentCss       String?  
+  status           String    @default("intake")
+  shareToken       String?   @unique
+  createdAt        DateTime  @default(now())
+  updatedAt        DateTime  @updatedAt
+  assets           Asset[]
+  messages         Message[]
+  versions         Version[]
+}
+
+model Asset {
+  id            String   @id @default(cuid())
+  projectId     String
+  project       Project  @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  name          String
+  mimeType      String
+  url           String  
+  rights        String   @default("usable")
+  sourceUrl     String? 
+  extractedText String? 
+  createdAt     DateTime @default(now())
+}
+
+model Message {
+  id        String   @id @default(cuid())
+  projectId String
+  project   Project  @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  role      String
+  content   String  
+  kind      String   @default("chat")
+  createdAt DateTime @default(now())
+}
+
+model Version {
+  id            String   @id @default(cuid())
+  projectId     String
+  project       Project  @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  versionNumber Int
+  html          String  
+  css           String  
+  note          String? 
+  createdAt     DateTime @default(now())
+
+  @@unique([projectId, versionNumber])
+}
