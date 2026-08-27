@@ -165,7 +165,7 @@ export default function Studio() {
 	const [pendingFiles, setPendingFiles] = useState<File[]>([]);
 	const [hearing, setHearing] = useState<HearingResult | null>(null);
 	const [answers, setAnswers] = useState<Record<string, string | string[]>>({});
-	const [statusText, setStatusText] = useState("● 保存済み");
+	const [statusText, setStatusText] = useState("● 待機中");
 	const [busy, setBusy] = useState(false);
 	const [error, setError] = useState("");
 	const [codeOpen, setCodeOpen] = useState(false);
