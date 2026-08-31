@@ -70,7 +70,12 @@ Requirements:
 - No external libraries or remote fonts.`;
 		const response = await openai.responses.create({
 			model: openAIModel,
-			input: multimodalInput(prompt, project.assets) as never,
+			input: multimodalInput(prompt, project.assets, {
+				imageDetail: "low",
+				maxImages: 2,
+				maxPdfs: 0,
+			}) as never,
+			max_output_tokens: 6_000,
 		});
 		generated = parseJsonOutput<GeneratedPage>(response.output_text);
 	}

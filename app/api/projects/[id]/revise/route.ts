@@ -52,7 +52,15 @@ Rules:
 - No script tags or external JS.
 - Keep the result responsive.`;
 
-  const response = await openai.responses.create({ model: openAIModel, input: multimodalInput(prompt, project.assets) as never });
+  const response = await openai.responses.create({
+    model: openAIModel,
+    input: multimodalInput(prompt, project.assets, {
+      imageDetail: "low",
+      maxImages: 1,
+      maxPdfs: 0,
+    }) as never,
+    max_output_tokens: 6_000,
+  });
   const revised = parseJsonOutput<GeneratedPage>(response.output_text);
   revised.html = sanitizeGeneratedHtml(revised.html);
   const last = await prisma.version.findFirst({ where: { projectId: id }, orderBy: { versionNumber: "desc" } });

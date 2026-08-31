@@ -83,12 +83,18 @@ export async function POST(request: Request, { params }: Params) {
     result = fallbackHearing(action === "continue");
   } else {
     const openai = getOpenAI();
+    const serializedAnswers = JSON.stringify(answers, null, 2).slice(0, 2_000);
     const prompt = `You are an expert Japanese LP director. Conduct a concise adaptive hearing before generating a landing-page wireframe.
 
-${projectTextContext(project)}
+${projectTextContext(project, {
+  maxAssets: 6,
+  maxAssetTextChars: 1_500,
+  maxFieldChars: 400,
+  maxMessageChars: 1_500,
+})}
 
 NEW ANSWERS
-${JSON.stringify(answers, null, 2)}
+${serializedAnswers}
 
 Return ONLY valid JSON in this exact shape:
 {
@@ -116,7 +122,12 @@ Rules:
 
     const response = await openai.responses.create({
       model: openAIModel,
-      input: multimodalInput(prompt, project.assets) as never,
+      input: multimodalInput(prompt, project.assets, {
+        imageDetail: "low",
+        maxImages: 2,
+        maxPdfs: 0,
+      }) as never,
+      max_output_tokens: 1_500,
     });
     result = parseJsonOutput<HearingResult>(response.output_text);
   }
