@@ -2758,6 +2758,16 @@ button:disabled {
   background: #f7f8ff
 }
 
+.dropzone.usable-dropzone {
+  border-color: #91a8f8;
+  background: #f8f9ff
+}
+
+.dropzone.usable-dropzone:hover {
+  border-color: #5878f5;
+  background: #f2f5ff
+}
+
 .dropzone.real input {
   display: none
 }
@@ -2779,6 +2789,11 @@ button:disabled {
   display: flex;
   justify-content: space-between;
   gap: 8px
+}
+
+.upload-pill.usable {
+  background: #eaf0ff;
+  color: #3154c7
 }
 
 .radio-list {

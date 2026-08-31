@@ -73,6 +73,7 @@ Must include: ${clip(project.mustInclude, maxFieldChars)}
 Design directions: ${clip(JSON.stringify(project.designDirections), maxFieldChars)}
 Reference URLs: ${clip(JSON.stringify(project.referenceUrls), maxFieldChars)}
 Reference mode: ${clip(project.referenceMode, maxFieldChars)}
+Usable materials: ${clip(project.usableMaterials, maxFieldChars)}
 
 ASSETS
 ${assets || "No uploaded assets yet."}${omittedAssets ? `\n${omittedAssets} additional asset(s) omitted from this request.` : ""}

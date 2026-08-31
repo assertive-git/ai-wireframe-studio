@@ -83,6 +83,10 @@ export async function POST(request: Request, { params }: Params) {
     result = fallbackHearing(action === "continue");
   } else {
     const openai = getOpenAI();
+    const hearingAssets = [
+      ...project.assets.filter((asset) => asset.rights === "reference"),
+      ...project.assets.filter((asset) => asset.rights !== "reference"),
+    ];
     const serializedAnswers = JSON.stringify(answers, null, 2).slice(0, 2_000);
     const prompt = `You are an expert Japanese LP director. Conduct a concise adaptive hearing before generating a landing-page wireframe.
 
@@ -122,7 +126,7 @@ Rules:
 
     const response = await openai.responses.create({
       model: openAIModel,
-      input: multimodalInput(prompt, project.assets, {
+      input: multimodalInput(prompt, hearingAssets, {
         imageDetail: "low",
         maxImages: 2,
         maxPdfs: 0,

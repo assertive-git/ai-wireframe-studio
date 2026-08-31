@@ -42,12 +42,29 @@ export async function POST(_: Request, { params }: Params) {
 		};
 	} else {
 		const openai = getOpenAI();
+		const usableAssets = project.assets.filter((asset) => asset.rights === "usable");
+		const usableMaterialNotes = (project.usableMaterials || "").slice(0, 2_000);
+		const prioritizedAssets = [
+			...usableAssets,
+			...project.assets.filter((asset) => asset.rights !== "usable"),
+		];
+		const usableAssetUrls = usableAssets
+			.filter((asset) => asset.mimeType.startsWith("image/"))
+			.slice(0, 12)
+			.map((asset) => `- ${asset.name}: ${asset.url}`)
+			.join("\n");
 		const prompt = `You are a senior Japanese web designer and frontend developer. Generate the FIRST DRAFT of an editable LP wireframe based strictly on the project context.
 
 ${projectTextContext(project)}
 
 HEARING SUMMARY
 ${JSON.stringify(project.hearingSummary, null, 2)}
+
+OUTPUT-USABLE MATERIAL NOTES / URLS
+${usableMaterialNotes || "No additional usable-material notes or URLs were supplied."}
+
+OUTPUT-USABLE UPLOADED IMAGE URLS
+${usableAssetUrls || "No output-usable image files were uploaded."}
 
 Return ONLY valid JSON:
 {
@@ -65,12 +82,14 @@ Requirements:
 - Create a polished grayscale/low-color wireframe suitable for client review, not a finished brand design.
 - Use actual copy derived from the supplied project information. Never invent factual claims, prices, dates, legal terms, awards, or campaign conditions. Mark unknown specifics as 「要確認」.
 - Include all items in mustInclude.
-- If an uploaded image URL is safe and marked usable, it may be used in an img tag. Reference-only material must not be copied verbatim.
+- Image inputs marked "reference" are for visual guidance only and MUST NOT appear in img src attributes.
+- Only URLs explicitly listed in OUTPUT-USABLE MATERIAL NOTES / URLS or OUTPUT-USABLE UPLOADED IMAGE URLS may appear in img src attributes.
+- If a usable-material URL is a web page rather than a direct image URL, treat it as a source note and do not place the page URL in an img src attribute.
 - Strong CTA hierarchy and conversion-oriented structure.
 - No external libraries or remote fonts.`;
 		const response = await openai.responses.create({
 			model: openAIModel,
-			input: multimodalInput(prompt, project.assets, {
+			input: multimodalInput(prompt, prioritizedAssets, {
 				imageDetail: "low",
 				maxImages: 2,
 				maxPdfs: 0,

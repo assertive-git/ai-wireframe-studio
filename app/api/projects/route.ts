@@ -30,6 +30,7 @@ export async function POST(request: Request) {
       designDirections: Array.isArray(body.designDirections) ? body.designDirections : [],
       referenceUrls: Array.isArray(body.referenceUrls) ? body.referenceUrls : [],
       referenceMode: body.referenceMode || "参考にしながらオリジナルをつくる",
+      usableMaterials: body.usableMaterials || "",
       status: "hearing",
     },
   });

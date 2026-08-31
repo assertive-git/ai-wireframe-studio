@@ -3,6 +3,7 @@
 import {
 	ChangeEvent,
 	Dispatch,
+	DragEvent,
 	FormEvent,
 	SetStateAction,
 	useEffect,
@@ -51,6 +52,7 @@ type Project = {
 	designDirections: string[];
 	referenceUrls: string[];
 	referenceMode: string;
+	usableMaterials?: string | null;
 	hearingSummary?: HearingResult["summary"] | null;
 	currentHtml?: string | null;
 	currentCss?: string | null;
@@ -88,6 +90,7 @@ type Intake = {
 	designDirections: string[];
 	referenceText: string;
 	referenceMode: string;
+	usableMaterials: string;
 };
 
 const initialIntake: Intake = {
@@ -100,6 +103,7 @@ const initialIntake: Intake = {
 	designDirections: ["明るい", "シンプル"],
 	referenceText: "",
 	referenceMode: "参考にしながらオリジナルをつくる",
+	usableMaterials: "",
 };
 
 const directionOptions = [
@@ -162,7 +166,8 @@ export default function Studio() {
 	const [projects, setProjects] = useState<ProjectListItem[]>([]);
 	const [project, setProject] = useState<Project | null>(null);
 	const [intake, setIntake] = useState<Intake>(initialIntake);
-	const [pendingFiles, setPendingFiles] = useState<File[]>([]);
+	const [pendingReferenceFiles, setPendingReferenceFiles] = useState<File[]>([]);
+	const [pendingUsableFiles, setPendingUsableFiles] = useState<File[]>([]);
 	const [hearing, setHearing] = useState<HearingResult | null>(null);
 	const [answers, setAnswers] = useState<Record<string, string | string[]>>({});
 	const [statusText, setStatusText] = useState("● 待機中");
@@ -248,7 +253,8 @@ export default function Studio() {
 
 	function resetNewProject() {
 		setIntake(initialIntake);
-		setPendingFiles([]);
+		setPendingReferenceFiles([]);
+		setPendingUsableFiles([]);
 		setProject(null);
 		setHearing(null);
 		setAnswers({});
@@ -285,9 +291,20 @@ export default function Studio() {
 		}));
 	}
 
-	function onFiles(event: ChangeEvent<HTMLInputElement>) {
-		setPendingFiles([...pendingFiles, ...Array.from(event.target.files || [])]);
+	function addPendingFiles(kind: "reference" | "usable", files: File[]) {
+		if (!files.length) return;
+		const setter = kind === "reference" ? setPendingReferenceFiles : setPendingUsableFiles;
+		setter((current) => [...current, ...files]);
+	}
+
+	function onFiles(kind: "reference" | "usable", event: ChangeEvent<HTMLInputElement>) {
+		addPendingFiles(kind, Array.from(event.target.files || []));
 		event.target.value = "";
+	}
+
+	function onFileDrop(kind: "reference" | "usable", event: DragEvent<HTMLLabelElement>) {
+		event.preventDefault();
+		addPendingFiles(kind, Array.from(event.dataTransfer.files || []));
 	}
 
 	async function uploadFiles(
@@ -341,7 +358,12 @@ export default function Studio() {
 			setProject({ ...created, assets: [], messages: [], versions: [] });
 			flash("案件を作成しました");
 
-			if (pendingFiles.length) await uploadFiles(created.id, pendingFiles);
+			if (pendingReferenceFiles.length) {
+				await uploadFiles(created.id, pendingReferenceFiles, "reference");
+			}
+			if (pendingUsableFiles.length) {
+				await uploadFiles(created.id, pendingUsableFiles, "usable");
+			}
 			for (const url of referenceUrls.slice(0, 3)) {
 				try {
 					await captureReference(created.id, url);
@@ -709,8 +731,10 @@ export default function Studio() {
 						<IntakeView
 							intake={intake}
 							setIntake={setIntake}
-							pendingFiles={pendingFiles}
+							pendingReferenceFiles={pendingReferenceFiles}
+							pendingUsableFiles={pendingUsableFiles}
 							onFiles={onFiles}
+							onFileDrop={onFileDrop}
 							toggleDirection={toggleDirection}
 							onSubmit={createProject}
 							busy={busy}
@@ -961,16 +985,26 @@ function Steps({ active }: { active: 1 | 2 | 3 | 4 }) {
 function IntakeView({
 	intake,
 	setIntake,
-	pendingFiles,
+	pendingReferenceFiles,
+	pendingUsableFiles,
 	onFiles,
+	onFileDrop,
 	toggleDirection,
 	onSubmit,
 	busy,
 }: {
 	intake: Intake;
 	setIntake: Dispatch<SetStateAction<Intake>>;
-	pendingFiles: File[];
-	onFiles: (event: ChangeEvent<HTMLInputElement>) => void;
+	pendingReferenceFiles: File[];
+	pendingUsableFiles: File[];
+	onFiles: (
+		kind: "reference" | "usable",
+		event: ChangeEvent<HTMLInputElement>
+	) => void;
+	onFileDrop: (
+		kind: "reference" | "usable",
+		event: DragEvent<HTMLLabelElement>
+	) => void;
 	toggleDirection: (value: string) => void;
 	onSubmit: (event: FormEvent) => void;
 	busy: boolean;
@@ -1079,13 +1113,21 @@ function IntakeView({
 						</div>
 						<div className="field full">
 							<label>画像・資料を追加</label>
-							<label className="dropzone real">
-								スクリーンショット、Excel、PDF、画像、HTMLを選択
-								<input type="file" multiple onChange={onFiles} />
-								<small>OpenAIと初校生成の参考にします。</small>
-								{pendingFiles.length > 0 && (
+							<label
+								className="dropzone real"
+								onDragOver={(event) => event.preventDefault()}
+								onDrop={(event) => onFileDrop("reference", event)}
+							>
+								スクリーンショット、Excel、PDF、画像、過去LPのHTMLをドラッグ＆ドロップ
+								<input
+									type="file"
+									multiple
+									onChange={(event) => onFiles("reference", event)}
+								/>
+								<small>AIが構成・デザインの参考として確認します（HTMLには使用しません）。</small>
+								{pendingReferenceFiles.length > 0 && (
 									<div className="upload-list">
-										{pendingFiles.map((file, index) => (
+										{pendingReferenceFiles.map((file, index) => (
 											<div
 												className="upload-pill"
 												key={`${file.name}-${index}`}
@@ -1121,6 +1163,52 @@ function IntakeView({
 									</li>
 								))}
 							</ul>
+						</div>
+						<div className="field full">
+							<label>使用可能素材</label>
+							<textarea
+								style={{ minHeight: 72 }}
+								value={intake.usableMaterials}
+								onChange={(event) =>
+									setIntake((current) => ({
+										...current,
+										usableMaterials: event.target.value,
+									}))
+								}
+								placeholder={"使用を許可する画像URLや条件を入力\n例：https://example.com/images/hero.jpg"}
+							/>
+							<span className="hint">
+								ここに記載した素材と、下で追加した素材だけをHTML/CSS出力に使用します。
+							</span>
+						</div>
+						<div className="field full">
+							<label>素材を追加</label>
+							<label
+								className="dropzone real usable-dropzone"
+								onDragOver={(event) => event.preventDefault()}
+								onDrop={(event) => onFileDrop("usable", event)}
+							>
+								Excel、PDF、画像、過去LPのHTMLをドラッグ＆ドロップ
+								<input
+									type="file"
+									multiple
+									onChange={(event) => onFiles("usable", event)}
+								/>
+								<small>HTML/CSS出力で使用可能な素材のみを追加してください。</small>
+								{pendingUsableFiles.length > 0 && (
+									<div className="upload-list">
+										{pendingUsableFiles.map((file, index) => (
+											<div
+												className="upload-pill usable"
+												key={`${file.name}-${index}`}
+											>
+												<span>{file.name}</span>
+												<span>{Math.ceil(file.size / 1024)} KB ・ 使用可</span>
+											</div>
+										))}
+									</div>
+								)}
+							</label>
 						</div>
 					</div>
 					<div className="form-footer">

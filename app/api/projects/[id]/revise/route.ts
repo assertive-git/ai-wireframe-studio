@@ -29,6 +29,17 @@ export async function POST(request: Request, { params }: Params) {
   await prisma.message.create({ data: { projectId: id, role: "user", kind: "revision", content: instruction } });
 
   const openai = getOpenAI();
+  const usableAssets = project.assets.filter((asset) => asset.rights === "usable");
+  const usableMaterialNotes = (project.usableMaterials || "").slice(0, 2_000);
+  const prioritizedAssets = [
+    ...usableAssets,
+    ...project.assets.filter((asset) => asset.rights !== "usable"),
+  ];
+  const usableAssetUrls = usableAssets
+    .filter((asset) => asset.mimeType.startsWith("image/"))
+    .slice(0, 12)
+    .map((asset) => `- ${asset.name}: ${asset.url}`)
+    .join("\n");
   const prompt = `You are editing an existing Japanese LP wireframe. Make the smallest targeted change that satisfies the instruction.
 
 ${projectTextContext(project)}
@@ -42,19 +53,27 @@ ${project.currentHtml}
 CURRENT CSS:
 ${project.currentCss}
 
+OUTPUT-USABLE MATERIAL NOTES / URLS:
+${usableMaterialNotes || "No additional usable-material notes or URLs were supplied."}
+
+OUTPUT-USABLE UPLOADED IMAGE URLS:
+${usableAssetUrls || "No output-usable image files were uploaded."}
+
 Return ONLY valid JSON:
 {"html":"full updated body fragment","css":"full updated CSS","sections":[{"id":"...","title":"...","description":"..."}],"note":"short Japanese summary of changes"}
 
 Rules:
 - Preserve unrelated sections and copy.
 - Keep data-section-id attributes stable whenever possible.
+- Reference-only assets are visual guidance only and MUST NOT appear in img src attributes.
+- New img src values may only use URLs explicitly listed in the two OUTPUT-USABLE sections above.
 - Do not invent factual claims; unknown factual details must be 「要確認」.
 - No script tags or external JS.
 - Keep the result responsive.`;
 
   const response = await openai.responses.create({
     model: openAIModel,
-    input: multimodalInput(prompt, project.assets, {
+    input: multimodalInput(prompt, prioritizedAssets, {
       imageDetail: "low",
       maxImages: 1,
       maxPdfs: 0,

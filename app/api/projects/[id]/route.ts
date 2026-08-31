@@ -30,6 +30,7 @@ export async function PATCH(request: Request, { params }: Params) {
     ...(body.designDirections !== undefined ? { designDirections: body.designDirections } : {}),
     ...(body.referenceUrls !== undefined ? { referenceUrls: body.referenceUrls } : {}),
     ...(body.referenceMode !== undefined ? { referenceMode: body.referenceMode } : {}),
+    ...(body.usableMaterials !== undefined ? { usableMaterials: body.usableMaterials } : {}),
     ...(body.hearingSummary !== undefined ? { hearingSummary: body.hearingSummary } : {}),
     ...(body.currentHtml !== undefined ? { currentHtml: body.currentHtml } : {}),
     ...(body.currentCss !== undefined ? { currentCss: body.currentCss } : {}),

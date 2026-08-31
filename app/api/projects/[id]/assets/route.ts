@@ -29,7 +29,8 @@ export async function POST(request: Request, { params }: Params) {
 
   const form = await request.formData();
   const files = form.getAll("files").filter((item): item is File => item instanceof File);
-  const rights = String(form.get("rights") || "usable");
+  const requestedRights = String(form.get("rights") || "usable");
+  const rights = requestedRights === "reference" ? "reference" : "usable";
   if (!files.length) return NextResponse.json({ error: "No files supplied" }, { status: 400 });
 
   const created = [];
