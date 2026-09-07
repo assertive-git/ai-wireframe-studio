@@ -131,7 +131,7 @@ Rules:
         maxImages: 2,
         maxPdfs: 0,
       }) as never,
-      max_output_tokens: 1_500,
+      max_output_tokens: 8_000,
     });
     result = parseJsonOutput<HearingResult>(response.output_text);
   }
