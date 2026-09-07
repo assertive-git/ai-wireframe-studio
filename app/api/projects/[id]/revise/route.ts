@@ -76,6 +76,7 @@ Rules:
   try {
     const response = await openai.responses.create({
       model: openAIModel,
+      reasoning: { effort: "high" },
       input: multimodalInput(prompt, prioritizedAssets, {
         imageDetail: "low",
         maxImages: 1,

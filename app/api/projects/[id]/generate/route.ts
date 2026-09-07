@@ -100,6 +100,7 @@ ${JSON.stringify(usableAssetUrls, null, 2)}`;
 			}
 			const response = await openai.responses.create({
 				model: openAIModel,
+				reasoning: { effort: "high" },
 				instructions,
 				input: prepared.input,
 				text: { format: generatedPageFormat },
