@@ -1,6 +1,7 @@
 import type { Asset, Message, Project } from "@prisma/client";
 
 type ProjectTextContextOptions = {
+  complete?: boolean;
   maxAssets?: number;
   maxAssetTextChars?: number;
   maxFieldChars?: number;
@@ -20,10 +21,10 @@ export function projectTextContext(
   project: Project & { assets?: Asset[]; messages?: Message[] },
   options: ProjectTextContextOptions = {},
 ) {
-  const maxAssets = options.maxAssets ?? 8;
-  const maxAssetTextChars = options.maxAssetTextChars ?? 2_000;
-  const maxFieldChars = options.maxFieldChars ?? 600;
-  const maxMessageChars = options.maxMessageChars ?? 2_000;
+  const maxAssets = options.complete ? Infinity : (options.maxAssets ?? 8);
+  const maxAssetTextChars = options.complete ? Infinity : (options.maxAssetTextChars ?? 2_000);
+  const maxFieldChars = options.complete ? Infinity : (options.maxFieldChars ?? 600);
+  const maxMessageChars = options.complete ? Infinity : (options.maxMessageChars ?? 2_000);
   const allAssets = project.assets || [];
   let remainingAssetText = maxAssetTextChars;
 
@@ -36,10 +37,10 @@ export function projectTextContext(
       remainingAssetText = Math.max(0, remainingAssetText - extractedText.length);
 
       return [
-        `Asset: ${clip(asset.name, 300)} (${clip(asset.mimeType, 100)})`,
-        `Rights: ${clip(asset.rights, 100)}`,
-        `Asset URL: ${clip(asset.url, 1_000)}`,
-        asset.sourceUrl ? `Source URL: ${clip(asset.sourceUrl, 1_000)}` : "",
+        `Asset: ${clip(asset.name, options.complete ? Infinity : 300)} (${clip(asset.mimeType, options.complete ? Infinity : 100)})`,
+        `Rights: ${clip(asset.rights, options.complete ? Infinity : 100)}`,
+        `Asset URL: ${clip(asset.url, options.complete ? Infinity : 1_000)}`,
+        asset.sourceUrl ? `Source URL: ${clip(asset.sourceUrl, options.complete ? Infinity : 1_000)}` : "",
         extractedText ? `Extracted text:\n${extractedText}` : "",
       ]
         .filter(Boolean)
