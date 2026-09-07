@@ -180,6 +180,7 @@ export default function Studio() {
 	});
 	const { html, css, inlineEditing, previewHtml } = documentState;
 	const previewFrameRef = useRef<HTMLIFrameElement>(null);
+	const restorePreviewScrollTop = useRef<number | null>(null);
 
 	// External changes replace the preview. Inline edits already exist in the
 	// iframe DOM, so only their saved HTML is updated in the message listener.
@@ -190,7 +191,19 @@ export default function Studio() {
 		setDocumentState((current) => ({ ...current, css: value, previewHtml: current.html }));
 	}
 	function setInlineEditing(value: boolean) {
+		// Changing inlineEditing rebuilds srcDoc. Capture the iframe position first
+		// and restore it after the new document finishes loading.
+		const frameWindow = previewFrameRef.current?.contentWindow;
+		restorePreviewScrollTop.current = frameWindow ? frameWindow.scrollY : null;
 		setDocumentState((current) => ({ ...current, inlineEditing: value, previewHtml: current.html }));
+	}
+	function handlePreviewLoad() {
+		const scrollTop = restorePreviewScrollTop.current;
+		if (scrollTop == null) return;
+		restorePreviewScrollTop.current = null;
+		requestAnimationFrame(() => {
+			previewFrameRef.current?.contentWindow?.scrollTo(0, scrollTop);
+		});
 	}
 	const [selectedSection, setSelectedSection] = useState<string>("");
 	const [leftTab, setLeftTab] = useState<"outline" | "assets" | "refs">(
@@ -1784,6 +1797,7 @@ function Workspace({
 								title="LP preview"
 								sandbox="allow-scripts"
 								srcDoc={preview}
+								onLoad={handlePreviewLoad}
 							/>
 						</div>
 					</div>
