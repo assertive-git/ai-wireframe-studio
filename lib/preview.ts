@@ -9,6 +9,7 @@ export function previewDocument(html: string, css: string, inlineEditing = false
 html,body{margin:0;padding:0;background:#fff;color:#111;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","Noto Sans JP",sans-serif}
 *{box-sizing:border-box}
 ${css}
+${inlineEditing ? '#lp-root [contenteditable="true"]{outline:none}' : ""}
 </style>
 </head>
 <body>
@@ -22,15 +23,25 @@ ${css}
     if (section) parent.postMessage({ type: 'lp-section-selected', id: section.dataset.sectionId }, '*');
   });
   if (inlineEditing) {
+    const originalEditing = new WeakMap();
     root.querySelectorAll('h1,h2,h3,h4,p,li,a,button,span').forEach((el) => {
       if (el.closest('[data-no-inline-edit]')) return;
+      originalEditing.set(el, el.getAttribute('contenteditable'));
       el.contentEditable = 'true';
-      el.style.outline = 'none';
     });
-    let timer;
+    // Autosave is debounced by the parent. Send edits immediately so switching
+    // modes or changing CSS does not discard the final keystrokes.
     root.addEventListener('input', () => {
-      clearTimeout(timer);
-      timer = setTimeout(() => parent.postMessage({ type: 'lp-inline-update', html: root.innerHTML }, '*'), 350);
+      const clone = root.cloneNode(true);
+      const liveElements = root.querySelectorAll('*');
+      const clonedElements = clone.querySelectorAll('*');
+      liveElements.forEach((el, index) => {
+        if (!originalEditing.has(el)) return;
+        const original = originalEditing.get(el);
+        if (original === null) clonedElements[index].removeAttribute('contenteditable');
+        else clonedElements[index].setAttribute('contenteditable', original);
+      });
+      parent.postMessage({ type: 'lp-inline-update', html: clone.innerHTML }, '*');
     });
   }
 })();

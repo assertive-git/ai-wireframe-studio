@@ -126,13 +126,12 @@ Rules:
 
     const response = await openai.responses.create({
       model: openAIModel,
-      reasoning: { effort: "high" },
       input: multimodalInput(prompt, hearingAssets, {
         imageDetail: "low",
         maxImages: 2,
         maxPdfs: 0,
       }) as never,
-      max_output_tokens: 8_000,
+      max_output_tokens: 1_500,
     });
     result = parseJsonOutput<HearingResult>(response.output_text);
   }

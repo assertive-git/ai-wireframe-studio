@@ -5,6 +5,7 @@ import { projectTextContext } from "@/lib/project-context";
 import { multimodalInput } from "@/lib/openai-input";
 import { generatedPageFormat, parseGeneratedPage, GeneratedPageError } from "@/lib/generated-page";
 import type { GeneratedPage } from "@/lib/types";
+import { formatGeneratedSource } from "@/lib/format-page";
 import { sanitizeGeneratedHtml } from "@/lib/sanitize";
 
 type Params = { params: Promise<{ id: string }> };
@@ -76,7 +77,7 @@ Rules:
   try {
     const response = await openai.responses.create({
       model: openAIModel,
-      reasoning: { effort: "high" },
+    reasoning: { effort: "high" },
       input: multimodalInput(prompt, prioritizedAssets, {
         imageDetail: "low",
         maxImages: 1,
@@ -94,6 +95,7 @@ Rules:
     return NextResponse.json({ error: "AIサービスへのリクエストに失敗しました。しばらくしてからお試しください。" }, { status: 502 });
   }
   revised.html = sanitizeGeneratedHtml(revised.html);
+  Object.assign(revised, await formatGeneratedSource(revised.html, revised.css));
   const last = await prisma.version.findFirst({ where: { projectId: id }, orderBy: { versionNumber: "desc" } });
   const versionNumber = (last?.versionNumber || 0) + 1;
 

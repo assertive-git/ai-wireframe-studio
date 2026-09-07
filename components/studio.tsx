@@ -6,6 +6,7 @@ import {
 	DragEvent,
 	FormEvent,
 	SetStateAction,
+	RefObject,
 	useEffect,
 	useMemo,
 	useRef,
@@ -174,9 +175,23 @@ export default function Studio() {
 	const [busy, setBusy] = useState(false);
 	const [error, setError] = useState("");
 	const [codeOpen, setCodeOpen] = useState(false);
-	const [inlineEditing, setInlineEditing] = useState(false);
-	const [html, setHtml] = useState("");
-	const [css, setCss] = useState("");
+	const [documentState, setDocumentState] = useState({
+		html: "", css: "", inlineEditing: false, previewHtml: "",
+	});
+	const { html, css, inlineEditing, previewHtml } = documentState;
+	const previewFrameRef = useRef<HTMLIFrameElement>(null);
+
+	// External changes replace the preview. Inline edits already exist in the
+	// iframe DOM, so only their saved HTML is updated in the message listener.
+	function setHtml(value: string) {
+		setDocumentState((current) => ({ ...current, html: value, previewHtml: value }));
+	}
+	function setCss(value: string) {
+		setDocumentState((current) => ({ ...current, css: value, previewHtml: current.html }));
+	}
+	function setInlineEditing(value: boolean) {
+		setDocumentState((current) => ({ ...current, inlineEditing: value, previewHtml: current.html }));
+	}
 	const [selectedSection, setSelectedSection] = useState<string>("");
 	const [leftTab, setLeftTab] = useState<"outline" | "assets" | "refs">(
 		"outline"
@@ -190,9 +205,22 @@ export default function Studio() {
 
 	const sections = useMemo(() => extractSections(html), [html]);
 	const preview = useMemo(
-		() => previewDocument(html, css, inlineEditing),
-		[html, css, inlineEditing]
+		() => previewDocument(previewHtml, css, inlineEditing),
+		[previewHtml, css, inlineEditing]
 	);
+
+	async function formatCode() {
+		try {
+			const { formatPageSource } = await import("@/lib/format-page");
+			const formatted = await formatPageSource(html, css);
+			// If the user typed while the formatter loaded, retain their newer edits.
+			setDocumentState((current) => current.html !== html || current.css !== css
+				? current
+				: { ...current, ...formatted, previewHtml: formatted.html });
+		} catch {
+			setError("コードを整形できませんでした。HTML/CSSの構文を確認してください。");
+		}
+	}
 
 	async function loadProjects() {
 		const list = await jsonFetch<ProjectListItem[]>("/api/projects");
@@ -213,13 +241,16 @@ export default function Studio() {
 
 	useEffect(() => {
 		const listener = (event: MessageEvent) => {
+			if (!previewFrameRef.current || event.source !== previewFrameRef.current.contentWindow) return;
 			if (event.data?.type === "lp-section-selected")
 				setSelectedSection(String(event.data.id || ""));
 			if (
 				event.data?.type === "lp-inline-update" &&
 				typeof event.data.html === "string"
-			)
-				setHtml(event.data.html);
+			) {
+				const updatedHtml = event.data.html;
+				setDocumentState((current) => ({ ...current, html: updatedHtml }));
+			}
 		};
 		window.addEventListener("message", listener);
 		return () => window.removeEventListener("message", listener);
@@ -765,7 +796,9 @@ export default function Studio() {
 							css={css}
 							setHtml={setHtml}
 							setCss={setCss}
+							formatCode={formatCode}
 							preview={preview}
+							previewFrameRef={previewFrameRef}
 							sections={sections}
 							selectedSection={selectedSection}
 							setSelectedSection={setSelectedSection}
@@ -1529,7 +1562,9 @@ function Workspace({
 	css,
 	setHtml,
 	setCss,
+	formatCode,
 	preview,
+	previewFrameRef,
 	sections,
 	selectedSection,
 	setSelectedSection,
@@ -1557,7 +1592,9 @@ function Workspace({
 	css: string;
 	setHtml: (value: string) => void;
 	setCss: (value: string) => void;
+	formatCode: () => void;
 	preview: string;
+	previewFrameRef: RefObject<HTMLIFrameElement | null>;
 	sections: Array<{ id: string; title: string; description: string }>;
 	selectedSection: string;
 	setSelectedSection: (value: string) => void;
@@ -1736,6 +1773,7 @@ function Workspace({
 					<div className="canvas-scroll">
 						<div className="canvas-shell">
 							<iframe
+								ref={previewFrameRef}
 								className="canvas-preview"
 								title="LP preview"
 								sandbox="allow-scripts"
@@ -1865,7 +1903,7 @@ function Workspace({
 					<div className="codebox">
 						<div className="codehead">
 							<span>index.html（body）</span>
-							<span>直接編集</span>
+							<button className="btn small" onClick={formatCode} disabled={busy}>HTML/CSSを整形</button>
 						</div>
 						<textarea
 							className="code-editor"

@@ -6,6 +6,7 @@ import { projectTextContext } from "@/lib/project-context";
 import { generationInput } from "@/lib/openai-input";
 import { generatedPageFormat, parseGeneratedPage, GeneratedPageError } from "@/lib/generated-page";
 import type { GeneratedPage } from "@/lib/types";
+import { formatGeneratedSource } from "@/lib/format-page";
 import { sanitizeGeneratedHtml } from "@/lib/sanitize";
 
 type Params = { params: Promise<{ id: string }> };
@@ -119,6 +120,7 @@ ${JSON.stringify(usableAssetUrls, null, 2)}`;
 	}
 
 	generated.html = sanitizeGeneratedHtml(generated.html);
+	Object.assign(generated, await formatGeneratedSource(generated.html, generated.css));
 
 	const versionNumber = await nextVersionNumber(id);
 	await prisma.$transaction([
