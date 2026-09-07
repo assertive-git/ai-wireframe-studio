@@ -180,7 +180,6 @@ export default function Studio() {
 	});
 	const { html, css, inlineEditing, previewHtml } = documentState;
 	const previewFrameRef = useRef<HTMLIFrameElement>(null);
-	const restorePreviewScrollTop = useRef<number | null>(null);
 
 	// External changes replace the preview. Inline edits already exist in the
 	// iframe DOM, so only their saved HTML is updated in the message listener.
@@ -191,19 +190,15 @@ export default function Studio() {
 		setDocumentState((current) => ({ ...current, css: value, previewHtml: current.html }));
 	}
 	function setInlineEditing(value: boolean) {
-		// Changing inlineEditing rebuilds srcDoc. Capture the iframe position first
-		// and restore it after the new document finishes loading.
-		const frameWindow = previewFrameRef.current?.contentWindow;
-		restorePreviewScrollTop.current = frameWindow ? frameWindow.scrollY : null;
-		setDocumentState((current) => ({ ...current, inlineEditing: value, previewHtml: current.html }));
+		setDocumentState((current) => ({ ...current, inlineEditing: value }));
+		previewFrameRef.current?.contentWindow?.postMessage(
+			{ type: "lp-set-inline-editing", enabled: value }, "*"
+		);
 	}
 	function handlePreviewLoad() {
-		const scrollTop = restorePreviewScrollTop.current;
-		if (scrollTop == null) return;
-		restorePreviewScrollTop.current = null;
-		requestAnimationFrame(() => {
-			previewFrameRef.current?.contentWindow?.scrollTo(0, scrollTop);
-		});
+		previewFrameRef.current?.contentWindow?.postMessage(
+			{ type: "lp-set-inline-editing", enabled: inlineEditing }, "*"
+		);
 	}
 	const [selectedSection, setSelectedSection] = useState<string>("");
 	const [leftTab, setLeftTab] = useState<"outline" | "assets" | "refs">(
@@ -218,8 +213,8 @@ export default function Studio() {
 
 	const sections = useMemo(() => extractSections(html), [html]);
 	const preview = useMemo(
-		() => previewDocument(previewHtml, css, inlineEditing),
-		[previewHtml, css, inlineEditing]
+		() => previewDocument(previewHtml, css),
+		[previewHtml, css]
 	);
 
 	async function formatCode() {
