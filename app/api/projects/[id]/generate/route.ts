@@ -1,9 +1,10 @@
 import { NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { fallbackPage } from "@/lib/default-page";
-import { getOpenAI, openAIModel, parseJsonOutput } from "@/lib/openai";
+import { getOpenAI, openAIModel } from "@/lib/openai";
 import { projectTextContext } from "@/lib/project-context";
 import { multimodalInput } from "@/lib/openai-input";
+import { generatedPageFormat, parseGeneratedPage, GeneratedPageError } from "@/lib/generated-page";
 import type { GeneratedPage } from "@/lib/types";
 import { sanitizeGeneratedHtml } from "@/lib/sanitize";
 
@@ -87,16 +88,24 @@ Requirements:
 - If a usable-material URL is a web page rather than a direct image URL, treat it as a source note and do not place the page URL in an img src attribute.
 - Strong CTA hierarchy and conversion-oriented structure.
 - No external libraries or remote fonts.`;
-		const response = await openai.responses.create({
-			model: openAIModel,
-			input: multimodalInput(prompt, prioritizedAssets, {
-				imageDetail: "low",
-				maxImages: 2,
-				maxPdfs: 0,
-			}) as never,
-			max_output_tokens: 6_000,
-		});
-		generated = parseJsonOutput<GeneratedPage>(response.output_text);
+		try {
+			const response = await openai.responses.create({
+				model: openAIModel,
+				input: multimodalInput(prompt, prioritizedAssets, {
+					imageDetail: "low",
+					maxImages: 2,
+					maxPdfs: 0,
+				}) as never,
+				text: { format: generatedPageFormat },
+				max_output_tokens: 24_000,
+			});
+			generated = parseGeneratedPage(response);
+		} catch (error) {
+			if (error instanceof GeneratedPageError) {
+				return NextResponse.json({ error: error.message }, { status: 502 });
+			}
+			return NextResponse.json({ error: "AIサービスへのリクエストに失敗しました。しばらくしてからお試しください。" }, { status: 502 });
+		}
 	}
 
 	generated.html = sanitizeGeneratedHtml(generated.html);
