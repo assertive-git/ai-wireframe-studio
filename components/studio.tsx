@@ -812,6 +812,7 @@ export default function Studio() {
 							formatCode={formatCode}
 							preview={preview}
 							previewFrameRef={previewFrameRef}
+							handlePreviewLoad={handlePreviewLoad}
 							sections={sections}
 							selectedSection={selectedSection}
 							setSelectedSection={setSelectedSection}
@@ -1578,6 +1579,7 @@ function Workspace({
 	formatCode,
 	preview,
 	previewFrameRef,
+	handlePreviewLoad,
 	sections,
 	selectedSection,
 	setSelectedSection,
@@ -1608,6 +1610,7 @@ function Workspace({
 	formatCode: () => void;
 	preview: string;
 	previewFrameRef: RefObject<HTMLIFrameElement | null>;
+	handlePreviewLoad: () => void;
 	sections: Array<{ id: string; title: string; description: string }>;
 	selectedSection: string;
 	setSelectedSection: (value: string) => void;
