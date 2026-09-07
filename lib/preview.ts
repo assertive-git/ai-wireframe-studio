@@ -18,6 +18,19 @@ ${inlineEditing ? '#lp-root [contenteditable="true"]{outline:none}' : ""}
 (() => {
   const inlineEditing = ${editing};
   const root = document.getElementById('lp-root');
+  window.addEventListener('message', (event) => {
+    if (event.source !== parent || event.data?.type !== 'lp-scroll-to-section' ||
+        typeof event.data.id !== 'string') return;
+    // Compare IDs directly so quotes and other selector characters are safe.
+    const section = Array.from(root.querySelectorAll('[data-section-id]'))
+      .find((element) => element.getAttribute('data-section-id') === event.data.id);
+    if (!section) return;
+    section.scrollIntoView({
+      behavior: 'instant',
+      block: 'start',
+      inline: 'nearest',
+    });
+  });
   document.addEventListener('click', (event) => {
     const section = event.target.closest('[data-section-id]');
     if (section) parent.postMessage({ type: 'lp-section-selected', id: section.dataset.sectionId }, '*');

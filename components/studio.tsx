@@ -1663,7 +1663,13 @@ function Workspace({
 											selectedSection === section.id ? "selected" : ""
 										}`}
 										style={{ width: "100%", textAlign: "left" }}
-										onClick={() => setSelectedSection(section.id)}
+										onClick={() => {
+											setSelectedSection(section.id);
+											previewFrameRef.current?.contentWindow?.postMessage(
+												{ type: "lp-scroll-to-section", id: section.id },
+												"*"
+											);
+										}}
 									>
 										<strong>{section.title}</strong>
 										<span>{section.id}</span>
