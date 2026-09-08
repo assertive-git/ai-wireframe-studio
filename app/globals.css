@@ -488,6 +488,13 @@ button {
   gap: 7px
 }
 
+.field-group {
+  background-color: #eee;
+  padding: 10px;
+  border-radius: 8px;
+  border: 1px solid #c8d2e1;
+}
+
 .field.full {
   grid-column: 1/-1;
 }
