@@ -842,8 +842,8 @@ export default function Studio() {
               setRightTab={setRightTab}
               codeOpen={codeOpen}
               setCodeOpen={setCodeOpen}
-              inlineEditing={inlineEditing}
-              setInlineEditing={setInlineEditing}
+            //   inlineEditing={inlineEditing}
+            //   setInlineEditing={setInlineEditing}
               revision={revision}
               setRevision={setRevision}
               revise={revise}
@@ -1619,8 +1619,8 @@ function Workspace({
   setRightTab,
   codeOpen,
   setCodeOpen,
-  inlineEditing,
-  setInlineEditing,
+//   inlineEditing,
+//   setInlineEditing,
   revision,
   setRevision,
   revise,
@@ -1650,8 +1650,8 @@ function Workspace({
   setRightTab: (value: "chat" | "versions") => void;
   codeOpen: boolean;
   setCodeOpen: (value: boolean) => void;
-  inlineEditing: boolean;
-  setInlineEditing: (value: boolean) => void;
+//   inlineEditing: boolean;
+//   setInlineEditing: (value: boolean) => void;
   revision: string;
   setRevision: (value: string) => void;
   revise: () => void;
@@ -1800,12 +1800,12 @@ function Workspace({
         <section className="canvasarea">
           <div className="canvasbar">
             <div className="canvas-controls">
-              <button
+              {/* <button
                 className="btn small"
                 onClick={() => setInlineEditing(!inlineEditing)}
               >
                 {inlineEditing ? "テキスト編集を終了" : "テキストを直接編集"}
-              </button>
+              </button> */}
               <button
                 className="btn small"
                 onClick={() => setCodeOpen(!codeOpen)}
