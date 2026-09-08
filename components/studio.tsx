@@ -1233,7 +1233,7 @@ function IntakeView({
                 ))}
               </ul>
             </div>
-            <div className="field-group">
+            <div className="field full field-group">
               <div className="field">
                 <label>使用可能素材</label>
                 <textarea
